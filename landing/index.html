@@ -603,7 +603,7 @@
           
           <div class="form-group">
             <label for="whatsapp">WhatsApp (para verificación) *</label>
-            <input type="tel" id="whatsapp" name="whatsapp" required placeholder="535XXXXXXX" pattern="535[0-9]{7}" autocomplete="tel">
+            <input type="tel" id="whatsapp" name="whatsapp" required placeholder="535XXXXXXX o +53 5 XXXXXXX" autocomplete="tel">
             <small style="color: var(--gris-claro); font-size: 0.8125rem;">Formato: 535XXXXXXX (sin + ni espacios)</small>
           </div>
           
@@ -761,11 +761,17 @@
         return;
       }
 
-      // WhatsApp format validation
-      const whatsapp = document.getElementById('whatsapp').value;
+      // WhatsApp format validation - flexible
+      let whatsapp = document.getElementById('whatsapp').value.trim();
+      // Normalizar: quitar +, espacios, guiones, paréntesis
+      whatsapp = whatsapp.replace(/[\s\-\(\)]/g, '').replace(/^\+53/, '53').replace(/^\+/, '');
+      // Validar: debe empezar con 535 y tener 10 dígitos totales
       if (!/^535\d{7}$/.test(whatsapp)) {
-        showToast('Formato WhatsApp inválido. Usa: 535XXXXXXX', 'error');
+        showToast('Formato WhatsApp inválido. Usa: 535XXXXXXX, +53 5 XXXXXXX, o 535-XXX-XXXX', 'error');
         return;
+      }
+      // Actualizar el campo con el valor normalizado
+      document.getElementById('whatsapp').value = whatsapp;
       }
 
       // Submit
