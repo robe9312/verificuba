@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+*.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# PocketBase binaries
+pocketbase
+pocketbase_*.zip
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PocketBase data
+pb_data/
+pb_migrations/
+
+# NocoDB
+nocodb-data/
+
+# Backups
+backups/
+*.sql.gz

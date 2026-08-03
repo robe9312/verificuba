@@ -1,0 +1,11 @@
+{
+  "name": "verificuba-telegram-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.0",
+    "express": "^4.21.0",
+    "telegraf": "^4.16.0"
+  }
+}
