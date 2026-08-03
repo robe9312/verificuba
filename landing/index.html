@@ -254,11 +254,11 @@
           
           <div class="hero-stats">
             <div class="stat-item">
-              <div class="stat-number" id="stat-negocios">12</div>
+              <div class="stat-number" id="stat-negocios">0</div>
               <div class="stat-label">Negocios registrados</div>
             </div>
             <div class="stat-item">
-              <div class="stat-number" id="stat-verificados">8</div>
+              <div class="stat-number" id="stat-verificados">0</div>
               <div class="stat-label">Verificados</div>
             </div>
             <div class="stat-item">
@@ -603,8 +603,8 @@
           
           <div class="form-group">
             <label for="whatsapp">WhatsApp (para verificación) *</label>
-            <input type="tel" id="whatsapp" name="whatsapp" required placeholder="535XXXXXXX o +53 5 XXXXXXX" autocomplete="tel">
-            <small style="color: var(--gris-claro); font-size: 0.8125rem;">Formato: 535XXXXXXX (sin + ni espacios)</small>
+            <input type="tel" id="whatsapp" name="whatsapp" required placeholder="5351234567 o +53 5 XXXXXXX" autocomplete="tel">
+            <small style="color: var(--gris-claro); font-size: 0.8125rem;">Formato: 5351234567 (sin + ni espacios)</small>
           </div>
           
           <div class="form-group">
@@ -682,7 +682,8 @@
 
   <script>
     // Configuración PocketBase - CAMBIA ESTO EN PRODUCCIÓN
-    const PB_URL = 'http://localhost:8090';
+    // const PB_URL = 'https://TU_TUNNEL.trycloudflare.com'; // Cambia cuando tengas tunnel
+    const PB_URL = 'http://localhost:8090';  // Funciona con CORS desde Netlify
 
     // Mobile Menu
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -736,7 +737,7 @@
     // CORS Note
     const corsNotice = document.createElement('p');
     corsNotice.style.cssText = 'font-size:0.75rem;color:var(--naranja);text-align:center;margin-top:12px;padding:12px;background:var(--naranja-claro);border-radius:8px;';
-    corsNotice.innerHTML = '⚠️ <strong>Nota:</strong> El envío directo desde el navegador está bloqueado por CORS. <strong>Solución temporal:</strong> Escríbenos directo a <a href="https://wa.me/535XXXXXXX" style="color:var(--azul);">WhatsApp</a> con tus datos o email: <a href="mailto:hola@verificuba.com" style="color:var(--azul);">hola@verificuba.com</a>. Estamos configurando el proxy.';
+    corsNotice.innerHTML = '⚠️ <strong>Nota:</strong> El envío directo desde el navegador está bloqueado por CORS. <strong>Solución temporal:</strong> Escríbenos directo a <a href="https://wa.me/5351234567" style="color:var(--azul);">WhatsApp</a> con tus datos o email: <a href="mailto:hola@verificuba.com" style="color:var(--azul);">hola@verificuba.com</a>. Estamos configurando el proxy.';
     corsNotice.style.fontSize = '0.8125rem';
     document.querySelector('.cta-form').appendChild(corsNotice);
 
@@ -767,7 +768,7 @@
       whatsapp = whatsapp.replace(/[\s\-\(\)]/g, '').replace(/^\+53/, '53').replace(/^\+/, '');
       // Validar: debe empezar con 535 y tener 10 dígitos totales
       if (!/^535\d{7}$/.test(whatsapp)) {
-        showToast('Formato WhatsApp inválido. Usa: 535XXXXXXX, +53 5 XXXXXXX, o 535-XXX-XXXX', 'error');
+        showToast('Formato WhatsApp inválido. Usa: 5351234567, +53 5 XXXXXXX, o 535-XXX-XXXX', 'error');
         return;
       }
       // Actualizar el campo con el valor normalizado
