@@ -1,839 +1,620 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="VerifiCuba - Directorio de negocios verificados para la nueva economía cubana. Regístrate gratis y gestiona tus impuestos, facturas y clientes.">
-  <meta name="theme-color" content="#1976d2">
-  <title>VerifiCuba - Directorio de Negocios Verificados</title>
-  
-  <meta property="og:title" content="VerifiCuba - Directorio de Negocios Verificados">
-  <meta property="og:description" content="El directorio de negocios verificados para la nueva economía cubana. Regístrate gratis y gestiona tus impuestos, facturas y clientes.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://verificuba.com/">
-  <meta property="og:image" content="https://verificuba.com/og-image.png">
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="VerifiCuba - Directorio de Negocios Verificados">
-  <meta name="twitter:description" content="El directorio de negocios verificados para la nueva economía cubana.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VerifiCuba — Directorio de Negocios Verificados</title>
+<meta name="description" content="El directorio de negocios verificados para la nueva economía cubana. Decreto 160. Regístrate gratis.">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/dm-sans@latest/700.css">
+<style>
+:root{
+  --bg:#0a0f1e; --ink:#eef2ff; --muted:#94a3b8; --muted2:#64748b;
+  --green:#22c55e; --emerald:#34d399; --teal:#2dd4bf; --cyan:#22d3ee;
+  --pink:#f472b6; --amber:#fbbf24; --red:#f87171;
+  --glass:rgba(255,255,255,.04); --glass2:rgba(255,255,255,.06); --line:rgba(255,255,255,.09);
+  --r-lg:28px; --r-md:18px; --r-sm:12px;
+  --sh:0 24px 70px rgba(2,6,18,.5);
+  --fd:'DM Sans',sans-serif; --fb:'Inter',system-ui,sans-serif;
+  --eo:cubic-bezier(.22,1,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--ink);overflow-x:hidden;line-height:1.6}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+::selection{background:rgba(34,197,94,.35)}
+.container{width:min(1140px,92%);margin:0 auto}
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.sm{width:14px;height:14px}.ic.lg{width:22px;height:22px}.ic-fill{fill:currentColor;stroke:none}
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    :root {
-      --azul: #1976d2;
-      --azul-oscuro: #0d47a1;
-      --azul-claro: #e3f2fd;
-      --verde: #2e7d32;
-      --verde-claro: #e8f5e9;
-      --naranja: #f57c00;
-      --naranja-claro: #fff3e0;
-      --gris-oscuro: #1a1a1a;
-      --gris: #4a4a4a;
-      --gris-claro: #6b7280;
-      --gris-muy-claro: #f3f4f6;
-      --blanco: #ffffff;
-      --sombra: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-      --sombra-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-      --radio: 12px;
-      --radio-sm: 8px;
-      --transicion: all 0.2s ease;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --gris-oscuro: #f9fafb;
-        --gris: #d1d5db;
-        --gris-claro: #9ca3af;
-        --gris-muy-claro: #1f2937;
-        --blanco: #111827;
-        --azul-claro: #1e3a5f;
-        --verde-claro: #14532d;
-        --naranja-claro: #7c2d12;
-      }
-    }
-    
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--gris-oscuro); background: var(--blanco); font-size: 16px; }
-    
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; font-size: 1rem; font-weight: 600; border-radius: var(--radio-sm); border: none; cursor: pointer; text-decoration: none; transition: var(--transicion); font-family: inherit; }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-primary { background: var(--azul); color: white; }
-    .btn-primary:hover:not(:disabled) { background: var(--azul-oscuro); transform: translateY(-1px); box-shadow: var(--sombra-lg); }
-    .btn-secondary { background: var(--gris-muy-claro); color: var(--gris-oscuro); border: 1px solid #e5e7eb; }
-    .btn-secondary:hover:not(:disabled) { background: #e5e7eb; }
-    .section { padding: 80px 0; }
-    .section-alt { background: var(--gris-muy-claro); }
-    .section-title { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; text-align: center; margin-bottom: 16px; color: var(--gris-oscuro); }
-    .section-subtitle { font-size: clamp(1rem, 2vw, 1.125rem); text-align: center; color: var(--gris-claro); max-width: 600px; margin: 0 auto 48px; line-height: 1.7; }
-    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-    .badge-verde { background: var(--verde-claro); color: var(--verde); }
-    .badge-naranja { background: var(--naranja-claro); color: var(--naranja); }
-    .badge-azul { background: var(--azul-claro); color: var(--azul); }
-    .grid { display: grid; gap: 24px; }
-    .grid-2 { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: repeat(3, 1fr); }
-    .grid-4 { grid-template-columns: repeat(4, 1fr); }
-    @media (max-width: 1024px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 640px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } .section { padding: 60px 0; } }
-    
-    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.08); transition: var(--transicion); }
-    @media (prefers-color-scheme: dark) { header { background: rgba(17,24,39,0.95); border-bottom: 1px solid rgba(255,255,255,0.08); } }
-    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--azul); text-decoration: none; }
-    .logo-icon { width: 36px; height: 36px; background: var(--azul); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem; }
-    nav { display: flex; align-items: center; gap: 8px; }
-    nav a { padding: 8px 16px; font-weight: 500; color: var(--gris); text-decoration: none; border-radius: var(--radio-sm); transition: var(--transicion); }
-    nav a:hover { color: var(--azul); background: var(--azul-claro); }
-    .header-cta { background: var(--azul); color: white; }
-    .header-cta:hover { background: var(--azul-oscuro); }
-    .mobile-menu-btn { display: none; background: none; border: none; padding: 8px; cursor: pointer; color: var(--gris-oscuro); }
-    @media (max-width: 768px) { .mobile-menu-btn { display: block; } nav { position: fixed; top: 64px; left: 0; right: 0; background: var(--blanco); flex-direction: column; padding: 16px; gap: 8px; border-bottom: 1px solid #e5e7eb; transform: translateY(-100%); opacity: 0; visibility: hidden; transition: var(--transicion); } nav.open { transform: translateY(0); opacity: 1; visibility: visible; } nav a { width: 100%; text-align: center; padding: 16px; } }
-    
-    .hero { padding: 160px 0 100px; background: linear-gradient(135deg, var(--azul-claro) 0%, #ffffff 100%); position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 60%; height: 120%; background: radial-gradient(ellipse, rgba(25,118,210,0.08) 0%, transparent 70%); pointer-events: none; }
-    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
-    @media (max-width: 900px) { .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 40px; } .hero { padding: 140px 0 80px; } }
-    .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--verde-claro); color: var(--verde); border-radius: 20px; font-size: 0.875rem; font-weight: 600; margin-bottom: 24px; display: inline-block; }
-    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; color: var(--gris-oscuro); margin-bottom: 20px; }
-    .hero h1 span { color: var(--azul); }
-    .hero p { font-size: clamp(1rem, 2vw, 1.25rem); color: var(--gris); line-height: 1.7; margin-bottom: 32px; max-width: 500px; }
-    .hero-buttons { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
-    .hero-stats { display: flex; flex-wrap: wrap; gap: 32px; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e7eb; }
-    .stat-item { text-align: center; }
-    .stat-number { font-size: 1.75rem; font-weight: 700; color: var(--azul); }
-    .stat-label { font-size: 0.875rem; color: var(--gris-claro); }
-    @media (max-width: 640px) { .hero-stats { gap: 16px; } .stat-number { font-size: 1.5rem; } }
-    .hero-visual { position: relative; }
-    .hero-card { background: white; border-radius: var(--radio); box-shadow: var(--sombra-lg); padding: 24px; border: 1px solid #e5e7eb; }
-    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
-    .card-avatar { width: 48px; height: 48px; background: var(--azul-claro); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--azul); font-size: 1.5rem; }
-    .card-title { font-weight: 600; color: var(--gris-oscuro); }
-    .card-subtitle { font-size: 0.875rem; color: var(--gris-claro); }
-    .card-body p { margin-bottom: 12px; color: var(--gris); font-size: 0.9375rem; }
-    .card-badge { display: inline-flex; gap: 8px; flex-wrap: wrap; }
-    .card-badge .badge { font-size: 0.7rem; }
-    
-    .problem-solution { position: relative; }
-    .ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
-    @media (max-width: 900px) { .ps-grid { grid-template-columns: 1fr; gap: 32px; } }
-    .ps-column h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
-    .ps-column h3 .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
-    .ps-problem h3 .icon { background: #fef2f2; color: #dc2626; }
-    .ps-solution h3 .icon { background: #f0fdf4; color: #16a34a; }
-    .ps-item { display: flex; gap: 16px; padding: 20px; background: var(--blanco); border-radius: var(--radio); box-shadow: var(--sombra); margin-bottom: 16px; border: 1px solid #e5e7eb; transition: var(--transicion); }
-    .ps-item:hover { box-shadow: var(--sombra-lg); transform: translateY(-2px); }
-    .ps-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
-    .ps-problem .ps-icon { background: #fef2f2; color: #dc2626; }
-    .ps-solution .ps-icon { background: #f0fdf4; color: #16a34a; }
-    .ps-content h4 { font-weight: 600; color: var(--gris-oscuro); margin-bottom: 4px; }
-    .ps-content p { color: var(--gris-claro); font-size: 0.9375rem; line-height: 1.6; }
-    
-    .steps { counter-reset: step; }
-    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    @media (max-width: 900px) { .steps-grid { grid-template-columns: 1fr; } }
-    .step { position: relative; padding: 32px 24px; background: var(--blanco); border-radius: var(--radio); box-shadow: var(--sombra); border: 1px solid #e5e7eb; }
-    .step::before { counter-increment: step; content: counter(step); position: absolute; top: -16px; left: 24px; width: 40px; height: 40px; background: var(--azul); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; }
-    .step-icon { width: 56px; height: 56px; background: var(--azul-claro); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--azul); font-size: 1.5rem; }
-    .step h3 { font-size: 1.125rem; font-weight: 600; color: var(--gris-oscuro); margin-bottom: 8px; }
-    .step p { color: var(--gris-claro); line-height: 1.6; }
-    
-    .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-    .tool-card { padding: 32px 24px; background: var(--blanco); border-radius: var(--radio); box-shadow: var(--sombra); border: 1px solid #e5e7eb; transition: var(--transicion); text-align: center; }
-    .tool-card:hover { box-shadow: var(--sombra-lg); transform: translateY(-4px); }
-    .tool-icon { width: 64px; height: 64px; background: var(--azul-claro); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--azul); font-size: 1.75rem; }
-    .tool-card h3 { font-size: 1.125rem; font-weight: 600; color: var(--gris-oscuro); margin-bottom: 8px; }
-    .tool-card p { color: var(--gris-claro); line-height: 1.6; font-size: 0.9375rem; }
-    .tool-card ul { text-align: left; margin-top: 16px; padding-left: 20px; color: var(--gris); font-size: 0.875rem; }
-    .tool-card li { margin-bottom: 6px; }
-    
-    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    @media (max-width: 900px) { .testimonials-grid { grid-template-columns: 1fr; } }
-    .testimonial { background: var(--blanco); border-radius: var(--radio); box-shadow: var(--sombra); border: 1px solid #e5e7eb; padding: 32px; }
-    .testimonial-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .testimonial-avatar { width: 48px; height: 48px; background: var(--azul-claro); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--azul); font-weight: 600; font-size: 1.125rem; }
-    .testimonial-name { font-weight: 600; color: var(--gris-oscuro); }
-    .testimonial-location { font-size: 0.875rem; color: var(--gris-claro); }
-    .testimonial-text { color: var(--gris); line-height: 1.7; margin-bottom: 16px; font-size: 0.9375rem; }
-    .testimonial-rating { color: #f59e0b; font-size: 1.125rem; }
-    .testimonial-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: var(--verde-claro); color: var(--verde); border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-top: 12px; }
-    
-    .cta-section { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-oscuro) 100%); color: white; position: relative; overflow: hidden; }
-    .cta-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4v-4h-2zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4v-4h-2zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4v-4h-2zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4v-4h-2zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4v-4h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); opacity: 0.1; }
-    .cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; padding: 0 20px; text-align: center; }
-    .cta-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.875rem; font-weight: 600; margin-bottom: 24px; }
-    .cta-section h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
-    .cta-section p { font-size: 1.125rem; opacity: 0.9; margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; }
-    .cta-form { background: white; color: var(--gris-oscuro); padding: 32px; border-radius: var(--radio); box-shadow: var(--sombra-lg); max-width: 500px; margin: 0 auto; text-align: left; }
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; font-weight: 500; margin-bottom: 8px; color: var(--gris-oscuro); font-size: 0.9375rem; }
-    .form-group input, .form-group select { width: 100%; padding: 14px 16px; border: 1px solid #d1d5db; border-radius: var(--radio-sm); font-size: 1rem; font-family: inherit; transition: var(--transicion); background: white; }
-    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--azul); box-shadow: 0 0 0 3px rgba(25,118,210,0.15); }
-    .form-group input::placeholder { color: #9ca3af; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
-    .form-submit { width: 100%; padding: 16px; font-size: 1.0625rem; font-weight: 600; margin-top: 8px; }
-    .form-note { text-align: center; margin-top: 16px; font-size: 0.8125rem; opacity: 0.7; }
-    .form-note a { color: var(--azul); text-decoration: none; font-weight: 500; }
-    .form-note a:hover { text-decoration: underline; }
-    
-    footer { background: var(--gris-oscuro); color: #d1d5db; padding: 60px 0 24px; }
-    .footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 48px; margin-bottom: 48px; }
-    @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr; } }
-    .footer-brand .logo { color: white; margin-bottom: 16px; }
-    .footer-brand p { color: #9ca3af; line-height: 1.7; font-size: 0.9375rem; max-width: 300px; }
-    .footer-column h4 { color: white; font-weight: 600; margin-bottom: 16px; font-size: 0.9375rem; }
-    .footer-column ul { list-style: none; }
-    .footer-column li { margin-bottom: 10px; }
-    .footer-column a { color: #9ca3af; text-decoration: none; font-size: 0.9375rem; transition: var(--transicion); }
-    .footer-column a:hover { color: var(--azul); }
-    .footer-bottom { padding-top: 24px; border-top: 1px solid #374151; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; font-size: 0.875rem; color: #9ca3af; }
-    .footer-bottom a { color: #9ca3af; text-decoration: none; margin-left: 16px; }
-    .footer-bottom a:hover { color: white; }
-    .social-links { display: flex; gap: 12px; }
-    .social-links a { width: 40px; height: 40px; background: #374151; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #9ca3af; transition: var(--transicion); }
-    .social-links a:hover { background: var(--azul); color: white; }
-    
-    .form-success { display: none; text-align: center; padding: 40px 24px; }
-    .form-success.show { display: block; }
-    .form-success-icon { width: 80px; height: 80px; background: var(--verde-claro); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--verde); font-size: 2.5rem; }
-    .form-success h3 { font-size: 1.5rem; font-weight: 700; color: var(--gris-oscuro); margin-bottom: 12px; }
-    .form-success p { color: var(--gris-claro); line-height: 1.7; }
-    .form-error { display: none; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 16px; border-radius: var(--radio-sm); margin-top: 16px; font-size: 0.9375rem; }
-    .form-error.show { display: block; }
-    
-    .toast { position: fixed; bottom: 24px; right: 24px; padding: 16px 24px; background: var(--gris-oscuro); color: white; border-radius: var(--radio); box-shadow: var(--sombra-lg); display: flex; align-items: center; gap: 12px; z-index: 1000; transform: translateX(120%); opacity: 0; transition: var(--transicion); }
-    .toast.show { transform: translateX(0); opacity: 1; }
-    .toast.success { background: var(--verde); }
-    .toast.error { background: #dc2626; }
-    .toast-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  </style>
+/* ══ CANVAS CONTINUO (fondo único → nada parece pegado) ══ */
+.canvas{position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(900px 500px at 85% -5%,rgba(45,212,191,.10),transparent 60%),
+  radial-gradient(800px 520px at -10% 30%,rgba(34,197,94,.08),transparent 60%),
+  radial-gradient(700px 500px at 70% 65%,rgba(244,114,182,.05),transparent 60%),
+  radial-gradient(800px 500px at 20% 95%,rgba(34,211,238,.06),transparent 60%),
+  var(--bg)}
+.canvas::after{content:'';position:absolute;inset:0;background-image:
+  linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 20%,transparent 80%)}
+
+/* ══ REVEALS ══ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--eo),transform .9s var(--eo)}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.4s}
+
+/* ══ HEADER ══ */
+header{position:fixed;top:0;left:0;right:0;z-index:100;transition:.4s var(--eo);padding:18px 0}
+header.scrolled{background:rgba(10,15,30,.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:10px 0;border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-weight:700;font-size:1.15rem}
+.brand img{width:34px;height:34px;border-radius:10px;background:#f8fafc;padding:3px;box-shadow:0 4px 18px rgba(34,197,94,.35)}
+.nav-links{display:flex;gap:30px;font-size:.85rem;color:var(--muted)}
+.nav-links a{transition:.25s}
+.nav-links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:none;cursor:pointer;font-family:var(--fb);
+  border-radius:999px;font-weight:700;transition:.3s var(--eo);position:relative}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--teal));color:#04150b;padding:14px 28px;font-size:.9rem;
+  box-shadow:0 8px 30px rgba(34,197,94,.35)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(34,197,94,.5)}
+.btn-ghost{background:var(--glass);border:1px solid var(--line);color:var(--ink);padding:14px 26px;font-size:.9rem;backdrop-filter:blur(10px)}
+.btn-ghost:hover{border-color:rgba(45,212,191,.5);color:var(--teal);transform:translateY(-3px)}
+.nav .btn-primary{padding:10px 22px;font-size:.8rem}
+
+/* ══ HERO ══ */
+.hero{padding:170px 0 90px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--emerald);background:rgba(34,197,94,.08);border:1px solid rgba(52,211,153,.3);padding:8px 16px;border-radius:999px;margin-bottom:26px}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blip 2s infinite;font-style:normal}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+h1{font-family:var(--fd);font-size:clamp(2.4rem,5vw,3.9rem);line-height:1.08;letter-spacing:-.03em;font-weight:700;margin-bottom:22px}
+h1 .grad{background:linear-gradient(92deg,var(--emerald),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.05rem;color:var(--muted);max-width:500px;line-height:1.75;margin-bottom:36px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:52px}
+.hero-stats{display:flex;gap:14px;flex-wrap:wrap}
+.hstat{background:var(--glass);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 22px;backdrop-filter:blur(10px);transition:.3s var(--eo)}
+.hstat:hover{transform:translateY(-4px);border-color:rgba(52,211,153,.4)}
+.hstat b{display:block;font-family:var(--fd);font-size:1.7rem;font-weight:700;color:var(--ink)}
+.hstat b em{font-style:normal;color:var(--emerald)}
+.hstat span{font-size:.72rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+
+/* stage derecho */
+.stage{position:relative;min-height:480px;display:flex;align-items:center;justify-content:center}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none}
+.orb.o1{width:340px;height:340px;background:rgba(34,197,94,.16);top:0;right:8%}
+.orb.o2{width:260px;height:260px;background:rgba(34,211,238,.12);bottom:4%;left:4%}
+.preview{position:relative;z-index:2;width:min(400px,100%);background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);padding:28px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:var(--sh);transform:rotate(2.5deg);animation:hover1 7s ease-in-out infinite;transition:.4s var(--eo)}
+.preview:hover{transform:rotate(0)}
+@keyframes hover1{0%,100%{translate:0 0}50%{translate:0 -12px}}
+.pv-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.pv-av{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,rgba(34,197,94,.25),rgba(45,212,191,.15));
+  border:1px solid rgba(52,211,153,.35);display:grid;place-items:center;color:var(--emerald)}
+.pv-head h3{font-size:1.05rem;font-weight:700}
+.pv-head p{font-size:.78rem;color:var(--muted)}
+.pv-badge{margin-left:auto;display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.14);color:var(--emerald);
+  font-size:.68rem;font-weight:800;padding:6px 12px;border-radius:999px;letter-spacing:.06em}
+.pv-desc{font-size:.88rem;color:var(--muted);line-height:1.65;margin-bottom:18px}
+.pv-meta{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.pv-meta div{display:flex;align-items:center;gap:10px;font-size:.82rem;color:var(--muted)}
+.pv-meta .ic{color:var(--teal)}
+.pv-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:14px;
+  background:linear-gradient(135deg,var(--green),var(--teal));color:#04150b;font-weight:800;font-size:.85rem;margin-bottom:16px}
+.pv-foot{display:flex;align-items:center;justify-content:space-between}
+.pv-stars{display:flex;align-items:center;gap:6px;font-size:.85rem;font-weight:700;color:var(--amber)}
+.pv-stars .row{display:flex;gap:2px}
+.pv-cat{font-size:.72rem;color:var(--cyan);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);padding:5px 12px;border-radius:999px}
+/* chips flotantes */
+.chip-f{position:absolute;z-index:3;display:flex;align-items:center;gap:8px;background:rgba(13,20,38,.8);backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:999px;padding:10px 16px;font-size:.75rem;font-weight:700;box-shadow:0 12px 34px rgba(2,6,18,.5)}
+.chip-f .ic{width:15px;height:15px}
+.chip-f.c1{top:6%;left:0;color:var(--emerald);animation:hover1 6s ease-in-out infinite .5s}
+.chip-f.c2{bottom:14%;right:0;color:var(--amber);animation:hover1 8s ease-in-out infinite 1s}
+.chip-f.c3{top:44%;right:-4%;color:var(--pink);animation:hover1 7s ease-in-out infinite 1.6s}
+
+/* ══ MARQUEE ══ */
+.marquee{padding:34px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);overflow:hidden}
+.mq-track{display:flex;gap:56px;width:max-content;animation:mq 36s linear infinite}
+.marquee:hover .mq-track{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.mq-item{display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.mq-item .ic{color:var(--emerald)}
+.mq-dot{width:4px;height:4px;border-radius:50%;background:var(--muted2)}
+
+/* ══ SECCIONES BASE ══ */
+section{padding:110px 0;position:relative}
+.sec-head{max-width:640px;margin-bottom:60px}
+.sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+.sec-tag{font-size:.7rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;display:block}
+h2{font-family:var(--fd);font-size:clamp(1.9rem,3.6vw,2.8rem);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-bottom:16px}
+h2 .grad{background:linear-gradient(92deg,var(--emerald),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sec-sub{color:var(--muted);font-size:1rem;line-height:1.75}
+
+/* ══ PROBLEMA / SOLUCIÓN (un solo panel integrado) ══ */
+.vs-panel{position:relative;display:grid;grid-template-columns:1fr 1fr;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  border:1px solid var(--line);border-radius:var(--r-lg);backdrop-filter:blur(16px);box-shadow:var(--sh);overflow:hidden}
+.vs-col{padding:52px 48px}
+.vs-col.right{background:rgba(34,197,94,.045)}
+.vs-col h3{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:1.2rem;margin-bottom:30px}
+.vs-col.left h3{color:var(--red)}
+.vs-col.right h3{color:var(--emerald)}
+.vs-item{display:flex;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.vs-item:first-of-type{border-top:none}
+.vs-ico{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex:none}
+.vs-col.left .vs-ico{background:rgba(248,113,113,.1);color:var(--red)}
+.vs-col.right .vs-ico{background:rgba(52,211,153,.12);color:var(--emerald)}
+.vs-item h4{font-size:.95rem;font-weight:700;margin-bottom:5px}
+.vs-item p{font-size:.85rem;color:var(--muted);line-height:1.65}
+.vs-orb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:58px;height:58px;border-radius:50%;
+  background:linear-gradient(135deg,var(--green),var(--teal));display:grid;place-items:center;color:#04150b;
+  box-shadow:0 0 0 10px var(--bg),0 0 44px rgba(34,197,94,.5)}
+
+/* ══ PASOS ══ */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;position:relative}
+.steps::before{content:'';position:absolute;top:36px;left:14%;right:14%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--teal),var(--green),transparent);opacity:.35}
+.step{text-align:center;position:relative;padding:0 12px}
+.step-num{width:72px;height:72px;margin:0 auto 24px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--fd);font-size:1.5rem;font-weight:700;color:#04150b;
+  background:linear-gradient(135deg,var(--emerald),var(--cyan));box-shadow:0 0 0 10px var(--bg),0 0 40px rgba(45,212,191,.4);
+  position:relative;z-index:1;transition:.3s var(--eo)}
+.step:hover .step-num{transform:scale(1.1)}
+.step h3{font-size:1.1rem;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+.step h3 .ic{color:var(--teal)}
+.step p{font-size:.88rem;color:var(--muted);line-height:1.7;max-width:280px;margin:0 auto}
+.step time{display:inline-block;margin-top:16px;font-size:.7rem;font-weight:800;letter-spacing:.12em;color:var(--emerald);
+  border:1px solid rgba(52,211,153,.35);border-radius:999px;padding:6px 14px}
+
+/* ══ BENTO HERRAMIENTAS ══ */
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.b-card{grid-column:span 1;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  border:1px solid var(--line);border-radius:var(--r-lg);padding:34px;backdrop-filter:blur(14px);transition:.35s var(--eo);position:relative;overflow:hidden}
+.b-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan));
+  opacity:0;transition:.35s}
+.b-card:hover{transform:translateY(-6px);border-color:rgba(52,211,153,.35);box-shadow:var(--sh)}
+.b-card:hover::before{opacity:1}
+.b-card.w2{grid-column:span 2}
+.b-ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;margin-bottom:22px;
+  background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(45,212,191,.1));border:1px solid rgba(52,211,153,.3);color:var(--emerald)}
+.b-card h3{font-size:1.15rem;font-weight:700;margin-bottom:10px}
+.b-card>p{font-size:.9rem;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.b-list{display:flex;flex-wrap:wrap;gap:10px 22px}
+.b-list span{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted)}
+.b-list .ic{color:var(--green);width:14px;height:14px}
+
+/* ══ TESTIMONIOS (postales) ══ */
+.testis{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.t-card{background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:32px;backdrop-filter:blur(14px);transform:rotate(var(--rot));transition:.4s var(--eo);box-shadow:var(--sh)}
+.t-card:hover{transform:rotate(0) translateY(-8px);border-color:rgba(52,211,153,.4)}
+.t-card:nth-child(1){--rot:-2deg}
+.t-card:nth-child(2){--rot:1.6deg;margin-top:26px}
+.t-card:nth-child(3){--rot:-1.2deg}
+.t-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.t-av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#04150b;flex:none}
+.t-av.a1{background:linear-gradient(135deg,var(--pink),var(--amber))}
+.t-av.a2{background:linear-gradient(135deg,var(--cyan),var(--emerald))}
+.t-av.a3{background:linear-gradient(135deg,var(--emerald),var(--green))}
+.t-head h4{font-size:.95rem;font-weight:700}
+.t-head span{font-size:.72rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.t-card blockquote{font-size:.92rem;color:var(--muted);line-height:1.75;font-style:italic;margin-bottom:20px}
+.t-foot{display:flex;align-items:center;justify-content:space-between}
+.t-stars{display:flex;gap:2px;color:var(--amber)}
+.t-verif{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:800;color:var(--emerald)}
+
+/* ══ REGISTRO + OFERTA ══ */
+.reg-wrap{position:relative}
+.reg-ribbon{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+  max-width:720px;margin:0 auto -34px;background:linear-gradient(135deg,var(--green),var(--teal));border-radius:var(--r-md);
+  padding:18px 28px;color:#04150b;font-weight:800;font-size:.92rem;box-shadow:0 18px 50px rgba(34,197,94,.4);text-align:center}
+.reg-panel{background:linear-gradient(165deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);
+  border-radius:var(--r-lg);backdrop-filter:blur(16px);box-shadow:var(--sh);padding:86px 56px 56px;max-width:860px;margin:0 auto}
+.reg-form{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.reg-form .full{grid-column:1/-1}
+.f-group label{display:block;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.f-group label b{color:var(--pink)}
+.f-group input,.f-group select,.f-group textarea{width:100%;background:rgba(10,15,30,.5);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:13px 16px;color:var(--ink);font-size:.9rem;font-family:var(--fb);outline:none;transition:.25s}
+.f-group input:focus,.f-group select:focus,.f-group textarea:focus{border-color:var(--emerald);box-shadow:0 0 0 4px rgba(52,211,153,.12)}
+.f-group select option{background:#0d1426}
+.f-group textarea{resize:vertical;min-height:84px}
+.f-check{grid-column:1/-1;display:flex;gap:10px;align-items:flex-start}
+.f-check input{width:16px;height:16px;accent-color:var(--green);margin-top:3px}
+.f-check label{font-size:.8rem;color:var(--muted);text-transform:none;letter-spacing:0}
+.reg-form .btn-primary{grid-column:1/-1;width:100%;padding:16px;font-size:.95rem}
+.reg-note{grid-column:1/-1;text-align:center;font-size:.72rem;color:var(--muted2)}
+.reg-success{display:none;text-align:center;padding:30px 10px}
+.reg-success.show{display:block;animation:pop .5s var(--eo)}
+@keyframes pop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.reg-success .ico{width:88px;height:88px;margin:0 auto 22px;border-radius:50%;background:rgba(34,197,94,.12);
+  border:1px solid rgba(52,211,153,.4);display:grid;place-items:center;color:var(--emerald)}
+.reg-success h3{font-family:var(--fd);font-size:1.6rem;color:var(--emerald);margin-bottom:10px}
+.reg-success p{color:var(--muted);font-size:.92rem}
+
+/* ══ CTA STRIP ══ */
+.strip{display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap;
+  background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:44px 52px;backdrop-filter:blur(14px);position:relative;overflow:hidden}
+.strip::before{content:'';position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(34,197,94,.18),transparent 70%)}
+.strip h3{font-family:var(--fd);font-size:1.5rem;font-weight:700;margin-bottom:6px}
+.strip p{color:var(--muted);font-size:.92rem;max-width:520px}
+
+/* ══ FOOTER ══ */
+footer{border-top:1px solid var(--line);padding:70px 0 34px;margin-top:40px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;margin-bottom:52px}
+.foot-brand p{color:var(--muted);font-size:.88rem;line-height:1.7;margin-top:16px;max-width:280px}
+.foot-col h4{font-size:.75rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin-bottom:18px}
+.foot-col a{display:block;color:var(--muted);font-size:.86rem;padding:5px 0;transition:.25s}
+.foot-col a:hover{color:var(--emerald);transform:translateX(4px)}
+.foot-bottom{border-top:1px solid var(--line);padding-top:26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-size:.78rem;color:var(--muted2)}
+.foot-disc{margin-top:18px;font-size:.72rem;color:var(--muted2);opacity:.7;line-height:1.7;max-width:640px}
+
+/* ══ FLOTANTES ══ */
+.wa-float{position:fixed;bottom:26px;right:26px;z-index:90;width:58px;height:58px;border-radius:50%;
+  background:linear-gradient(135deg,#25d366,#128c7e);display:grid;place-items:center;box-shadow:0 10px 34px rgba(37,211,102,.45);transition:.3s var(--eo)}
+.wa-float:hover{transform:scale(1.12)}
+.wa-float svg{width:28px;height:28px;fill:#fff}
+#toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,20px);background:#131a2c;color:#fff;border:1px solid var(--line);
+  padding:12px 22px;border-radius:999px;font-size:.82rem;font-weight:600;opacity:0;pointer-events:none;transition:.4s;z-index:99;box-shadow:var(--sh)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:1000px){
+  .nav-links{display:none}
+  .hero{padding-top:130px}
+  .hero-grid{grid-template-columns:1fr}
+  .stage{min-height:440px;margin-top:20px}
+  .vs-panel{grid-template-columns:1fr}
+  .vs-orb{display:none}
+  .vs-col{padding:40px 30px}
+  .steps{grid-template-columns:1fr;gap:44px}
+  .steps::before{display:none}
+  .bento{grid-template-columns:1fr}
+  .b-card.w2{grid-column:span 1}
+  .testis{grid-template-columns:1fr;max-width:480px;margin:0 auto}
+  .t-card:nth-child(2){margin-top:0}
+  .reg-panel{padding:96px 26px 40px}
+  .reg-form{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .strip{padding:34px 28px}
+}
+</style>
 </head>
 <body>
-  <header id="header">
-    <div class="header-inner">
-      <a href="#" class="logo" aria-label="VerifiCuba - Inicio">
-        <span class="logo-icon">✓</span>
-        <span>VerifiCuba</span>
-      </a>
-      <nav id="nav" role="navigation" aria-label="Navegación principal">
-        <a href="#inicio">Inicio</a>
-        <a href="#problema">Por qué VerifiCuba</a>
-        <a href="#como-funciona">Cómo funciona</a>
-        <a href="#herramientas">Herramientas</a>
-        <a href="#testimonios">Testimonios</a>
-        <a href="#registro" class="btn btn-primary header-cta">Registrar mi negocio</a>
-      </nav>
-      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú" aria-expanded="false">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      </button>
-    </div>
-  </header>
+<div class="canvas"></div>
 
-  <main>
-    <section class="hero" id="inicio" aria-labelledby="hero-title">
-      <div class="hero-inner">
-        <div class="hero-content">
-          <span class="hero-badge">🇨🇺 Para la nueva economía cubana</span>
-          <h1 id="hero-title">El directorio de <span>negocios verificados</span> para la nueva economía cubana</h1>
-          <p>Con el Decreto 160, miles de nuevos negocios están abriendo. ¿Cómo te van a encontrar tus clientes? Registra tu negocio gratis, obtén tu badge de verificación y accede a herramientas fiscales gratuitas.</p>
-          
-          <div class="hero-buttons">
-            <a href="#registro" class="btn btn-primary" style="font-size: 1.0625rem; padding: 16px 32px;">
-              📝 Registrar mi negocio gratis
-            </a>
-            <a href="#como-funciona" class="btn btn-secondary">Ver cómo funciona</a>
-          </div>
-          
-          <div class="hero-stats">
-            <div class="stat-item">
-              <div class="stat-number" id="stat-negocios">0</div>
-              <div class="stat-label">Negocios registrados</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number" id="stat-verificados">0</div>
-              <div class="stat-label">Verificados</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number" id="stat-categorias">12</div>
-              <div class="stat-label">Categorías</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number">0</div>
-              <div class="stat-label">Comisión por venta</div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hero-card">
-            <div class="card-header">
-              <div class="card-avatar">🍽️</div>
-              <div>
-                <div class="card-title">Paladar Doña Marta</div>
-                <div class="card-subtitle">Centro Habana, La Habana · 🏷️ Verificado</div>
-              </div>
-            </div>
-            <div class="card-body">
-              <p><strong>Comida cubana tradicional.</strong> Almuerzo y cena. Delivery en Centro Habana.</p>
-              <p>📍 Calle 23 #456, Centro Habana, La Habana</p>
-              <p>🕐 Lun-Sáb 11am-10pm · 📞 +53 5XXXXXXX</p>
-              <p>💳 Transfermóvil · EnZona · Efectivo</p>
-              <div class="card-badge">
-                <span class="badge badge-verde">✅ Verificado</span>
-                <span class="badge badge-azul">🍽️ Alimentación</span>
-                <span class="badge badge-naranja">⭐ 4.8 (23 reseñas)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+<!-- ══ SPRITE ══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol>
+<symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+<symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+<symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></symbol>
+<symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M11.5 2.3a.55.55 0 0 1 1 0l2.4 4.87a2.2 2.2 0 0 0 1.66 1.2l5.38.79a.55.55 0 0 1 .3.94l-3.89 3.8a2.2 2.2 0 0 0-.63 1.95l.92 5.36a.55.55 0 0 1-.8.58l-4.8-2.53a2.2 2.2 0 0 0-2.06 0l-4.8 2.53a.55.55 0 0 1-.8-.58l.92-5.36a2.2 2.2 0 0 0-.63-1.95l-3.9-3.8a.55.55 0 0 1 .31-.94l5.38-.78a2.2 2.2 0 0 0 1.66-1.21z"/></symbol>
+<symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></symbol>
+<symbol id="i-badge" viewBox="0 0 24 24"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8M16 17H8M10 9H8"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M10.27 21a2 2 0 0 0 3.46 0"/><path d="M3.26 15.33A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.67C19.41 13.96 18 12.5 18 8a6 6 0 0 0-12 0c0 4.5-1.41 5.96-2.74 7.33"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+<symbol id="i-trend" viewBox="0 0 24 24"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-5.5 10.2-7.4 11.8a1 1 0 0 1-1.2 0C9.5 20.2 4 15 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C9.5 3 11 5 12 8c1-3 2.5-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M21.17 6.81a1 1 0 0 0-3.98-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.63l4.35-1.32a2 2 0 0 0 .8-.51z"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+</defs></svg>
 
-    <section class="section problem-solution" id="problema" aria-labelledby="problema-title">
-      <div class="container">
-        <div class="ps-grid">
-          <div class="ps-column ps-problem">
-            <h3 id="problema-title"><span class="icon">❌</span> El problema hoy</h3>
-            <div class="ps-item">
-              <div class="ps-icon">🔍</div>
-              <div class="ps-content">
-                <h4>No te encuentran</h4>
-                <p>Google Maps no tiene tu negocio. Los grupos de Facebook se pierden en 2 horas. Revolico es un mar de anuncios sin confianza.</p>
-              </div>
-            </div>
-            <div class="ps-item">
-              <div class="ps-icon">⭐</div>
-              <div class="ps-content">
-                <h4>Sin reseñas verificadas</h4>
-                <p>Los clientes no saben en quién confiar. Un mal comentario anónimo te hunde. No hay forma de demostrar tu calidad.</p>
-              </div>
-            </div>
-            <div class="ps-item">
-              <div class="ps-icon">📊</div>
-              <div class="ps-content">
-                <h4>Impuestos = dolor de cabeza</h4>
-                <p>¿Cuánto debes a la ONAT este mes? ¿Ventas 10%? ¿Territorial 5%? ¿DJ antes del 28 feb para 5% descuento? La ONAT no avisa, tú pagas multas.</p>
-              </div>
-            </div>
-            <div class="ps-item">
-              <div class="ps-icon">📱</div>
-              <div class="ps-content">
-                <h4>WhatsApp = tu web</h4>
-                <p>Fotos borrosas, precios desactualizados, tardas 2 horas en responder. Cada pregunta que el cliente hace = un cliente que se va.</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="ps-column ps-solution">
-            <h3 id="solucion-title"><span class="icon">✅</span> Lo que da VerifiCuba</h3>
-            <div class="ps-item">
-              <div class="ps-icon">🎯</div>
-              <div class="ps-content">
-                <h4>Perfil verificado con badge ✓</h4>
-                <p>Tu negocio aparece en búsquedas por categoría, provincia, municipio. Badge "Verificado ✓" que genera confianza inmediata. SEO local real.</p>
-              </div>
-            </div>
-            <div class="ps-item">
-              <div class="ps-icon">⭐</div>
-              <div class="ps-content">
-                <h4>Reseñas reales de clientes</h4>
-                <p>Solo clientes reales pueden reseñar. Cada reseña verificada = 10 clientes futuros gratis. Responde públicamente y demuestra profesionalidad.</p>
-              </div>
-            </div>
-            <div class="ps-item">
-              <div class="ps-icon">🧮</div>
-              <div class="ps-content">
-                <h4>Calculadora ONAT + Alertas</h4>
-                <p>Ingresa tus ventas → te decimos EXACTAMENTE qué debes (Ventas 10%, Territorial 5%, DJ, Seguridad Social). Alertas por WhatsApp días 15 y 30.</p>
-              </div>
-            </div>
-            <div class="ps-item">
-              <div class="ps-icon">📄</div>
-              <div class="ps-content">
-                <h4>Facturas en 3 clics + Dashboard</h4>
-                <p>Genera facturas PDF válidas. Registra ingresos/gastos. Ve tu balance semanal. Exporta reporte mensual para la ONAT. Todo gratis para fundadores.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section steps" id="como-funciona" aria-labelledby="como-title">
-      <div class="container">
-        <h2 class="section-title" id="como-title">En 3 pasos estás dentro</h2>
-        <p class="section-subtitle">Sin trámites complejos. Sin letra chica. En menos de 10 minutos tu negocio está verificado y visible.</p>
-        
-        <div class="steps-grid">
-          <div class="step">
-            <div class="step-icon">📝</div>
-            <h3>Regístrate</h3>
-            <p>Completa el formulario con los datos de tu negocio: nombre, categoría, ubicación, WhatsApp, tipo de actor (TCP/MIPYME). 2 minutos.</p>
-          </div>
-          <div class="step">
-            <div class="step-icon">✅</div>
-            <h3>Verificamos</h3>
-            <p>Te llamamos por WhatsApp (5 min). Confirmamos que existes: foto de fachada, licencia, ubicación. Si todo cuadra → Badge "Verificado ✓" en 24h.</p>
-          </div>
-          <div class="step">
-            <div class="step-icon">🚀</div>
-            <h3>Crece</h3>
-            <p>Tu perfil está vivo. Clientes te encuentran, te reseñan, te contactan por WhatsApp. Accedes a herramientas fiscales gratis. 6 meses premium gratis por ser fundador.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-alt" id="herramientas" aria-labelledby="herramientas-title">
-      <div class="container">
-        <h2 class="section-title" id="herramientas-title">Herramientas gratis desde el día 1</h2>
-        <p class="section-subtitle">No es solo un directorio. Es tu centro de operaciones. Todo incluido en tu plan fundador (6 meses gratis).</p>
-        
-        <div class="tools-grid">
-          <article class="tool-card">
-            <div class="tool-icon">📄</div>
-            <h3>Generador de Facturas PDF</h3>
-            <p>Crea facturas profesionales en 3 clics. Válidas para clientes y ONAT. Items, impuestos, totales automáticos. Descarga e imprime al instante.</p>
-            <ul>
-              <li>Items ilimitados</li>
-              <li>Impuesto 10% automático</li>
-              <li>PDF listo para imprimir</li>
-              <li>Historial guardado</li>
-            </ul>
-          </article>
-          
-          <article class="tool-card">
-            <div class="tool-icon">🧮</div>
-            <h3>Calculadora ONAT Inteligente</h3>
-            <p>Ingresa tus ventas mensuales → te decimos EXACTAMENTE qué debes: Ventas 10%, Territorial 5%, Seguridad Social, DJ anual. Sin sorpresas.</p>
-            <ul>
-              <li>Ventas 10% automático</li>
-              <li>Territorial 5% / 1%</li>
-              <li>DJ progresiva 15-50%</li>
-              <li>Descuento 5% si pagas antes 28 feb</li>
-            </ul>
-          </article>
-          
-          <article class="tool-card">
-            <div class="tool-icon">📅</div>
-            <h3>Calendario Fiscal + Alertas WhatsApp</h3>
-            <p>Nunca más olvides un vencimiento. Alertas automáticas día 15 (ventas/territorial) y día 30 (seguridad social). Recordatorio DJ enero-marzo.</p>
-            <ul>
-              <li>Alerta día 15 cada mes</li>
-              <li>Alerta día 30 cada mes</li>
-              <li>Recordatorio DJ enero-marzo</li>
-              <li>Por WhatsApp directo</li>
-            </ul>
-          </article>
-          
-          <article class="tool-card">
-            <div class="tool-icon">📊</div>
-            <h3>Dashboard Financiero Simple</h3>
-            <p>Registra ingresos y gastos en segundos. Ve tu balance semanal/mensual. Gráficos de evolución. Exporta reporte mensual para la ONAT en un clic.</p>
-            <ul>
-              <li>Ingresos vs Gastos visual</li>
-              <li>Balance neto semanal</li>
-              <li>Exportar Excel/PDF mensual</li>
-              <li>Categorías personalizadas</li>
-            </ul>
-          </article>
-          
-          <article class="tool-card">
-            <div class="tool-icon">🔗</div>
-            <h3>Enlace Directo a WhatsApp + Mapa</h3>
-            <p>Tu perfil tiene botón "Escribir por WhatsApp" y mapa integrado. Clientes te ubican, te escriben, compran. Sin fricción.</p>
-            <ul>
-              <li>Botón WhatsApp directo</li>
-              <li>Google Maps integrado</li>
-              <li>Horario visible</li>
-              <li>Métodos de pago visibles</li>
-            </ul>
-          </article>
-          
-          <article class="tool-card">
-            <div class="tool-icon">📈</div>
-            <h3>Estadísticas de tu Perfil</h3>
-            <p>Sabes cuánta gente ve tu perfil, cuántos clican WhatsApp, cuántos reseñan. Métricas reales para decidir dónde invertir tu tiempo.</p>
-            <ul>
-              <li>Visitas al perfil</li>
-              <li>Clics a WhatsApp</li>
-              <li>Reseñas nuevas</li>
-              <li>Comparativa por categoría</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="testimonios" aria-labelledby="testimonios-title">
-      <div class="container">
-        <h2 class="section-title" id="testimonios-title">Lo que dicen los primeros</h2>
-        <p class="section-subtitle">Negocios reales que ya confían en VerifiCuba para crecer.</p>
-        
-        <div class="testimonials-grid">
-          <article class="testimonial">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">M</div>
-              <div>
-                <div class="testimonial-name">Marta González</div>
-                <div class="testimonial-location">Paladar Doña Marta · Centro Habana</div>
-              </div>
-            </div>
-            <p class="testimonial-text">"Me registré el martes. El jueves ya tenía 3 clientes nuevos que dijeron 'te vi en VerifiCuba'. El badge de verificado hace que confíen antes de escribir."</p>
-            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
-            <span class="testimonial-badge">✅ Verificada</span>
-          </article>
-          
-          <article class="testimonial">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">L</div>
-              <div>
-                <div class="testimonial-name">Luis Ramírez</div>
-                <div class="testimonial-location">Taller Eléctrico Luis · Playa</div>
-              </div>
-            </div>
-            <p class="testimonial-text">"La calculadora de impuestos me ahorró horas de Excel. Ahora sé exactamente cuánto apartar cada mes para la ONAT. Me avisaron por WhatsApp el día 15 y el 30."</p>
-            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
-            <span class="testimonial-badge">✅ Verificada</span>
-          </article>
-          
-          <article class="testimonial">
-            <div class="testimonial-header">
-              <div class="testimonial-avatar">A</div>
-              <div>
-                <div class="testimonial-name">Ana Martínez</div>
-                <div class="testimonial-location">Peluquería Ana · Marianao</div>
-              </div>
-            </div>
-            <p class="testimonial-text">"Lo mejor: el badge de verificado. Los clientes confían antes de escribir. Y las facturas en 3 clics me quitan el dolor de cabeza de hacerlas a mano."</p>
-            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
-            <span class="testimonial-badge">✅ Verificada</span>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section cta-section" id="registro" aria-labelledby="registro-title">
-      <div class="cta-inner">
-        <span class="cta-badge">🎁 Oferta Fundadores: 6 meses Premium GRATIS</span>
-        <h2 id="registro-title">¿Listo para que te encuentren?</h2>
-        <p>Únete a los primeros 50 negocios fundadores. Registro gratis, verificación en 24h, 6 meses de plan Premium (Destacado) gratis.</p>
-        
-        <form class="cta-form" id="registroForm" novalidate>
-          <div class="form-success" id="formSuccess" role="status" aria-live="polite">
-            <div class="form-success-icon">✓</div>
-            <h3>¡Registro enviado!</h3>
-            <p>Hemos recibido tu pre-registro. Te contactaremos por WhatsApp en las próximas 24 horas para verificar tu negocio y activar tu perfil gratis.</p>
-          </div>
-          
-          <div class="form-error" id="formError" role="alert"></div>
-          
-          <div class="form-group">
-            <label for="nombre">Nombre del negocio *</label>
-            <input type="text" id="nombre" name="nombre" required placeholder="Ej: Paladar Doña Marta" autocomplete="organization">
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="tipo_actor">Tipo de actor *</label>
-              <select id="tipo_actor" name="tipo_actor" required>
-                <option value="">Selecciona...</option>
-                <option value="TCP">TCP (Trabajador por Cuenta Propia)</option>
-                <option value="MIPYME">MIPYME</option>
-                <option value="CNA">CNA</option>
-                <option value="Estatal">Estatal</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="categoria">Categoría *</label>
-              <select id="categoria" name="categoria" required>
-                <option value="">Selecciona...</option>
-                <option value="Alimentación y Gastronomía">🍽️ Alimentación y Gastronomía</option>
-                <option value="Talleres y Reparaciones">🔧 Talleres y Reparaciones</option>
-                <option value="Belleza y Cuidado Personal">💇 Belleza y Cuidado Personal</option>
-                <option value="Construcción y Vivienda">🏗️ Construcción y Vivienda</option>
-                <option value="Transporte y Logística">🚗 Transporte y Logística</option>
-                <option value="Comercio y Distribución">📦 Comercio y Distribución</option>
-                <option value="Servicios Digitales">💻 Servicios Digitales</option>
-                <option value="Salud y Bienestar">🏥 Salud y Bienestar</option>
-                <option value="Energía y Sostenibilidad">⚡ Energía y Sostenibilidad</option>
-                <option value="Educación y Formación">📚 Educación y Formación</option>
-                <option value="Agricultura y Ganadería">🌾 Agricultura y Ganadería</option>
-                <option value="Otros Servicios">📋 Otros Servicios</option>
-              </select>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="provincia">Provincia *</label>
-              <select id="provincia" name="provincia" required>
-                <option value="">Selecciona...</option>
-                <option value="La Habana">La Habana</option>
-                <option value="Matanzas">Matanzas</option>
-                <option value="Santiago de Cuba">Santiago de Cuba</option>
-                <option value="Holguín">Holguín</option>
-                <option value="Villa Clara">Villa Clara</option>
-                <option value="Camagüey">Camagüey</option>
-                <option value="Granma">Granma</option>
-                <option value="Las Tunas">Las Tunas</option>
-                <option value="Cienfuegos">Cienfuegos</option>
-                <option value="Pinar del Río">Pinar del Río</option>
-                <option value="Sancti Spíritus">Sancti Spíritus</option>
-                <option value="Ciego de Ávila">Ciego de Ávila</option>
-                <option value="Guantánamo">Guantánamo</option>
-                <option value="Artemisa">Artemisa</option>
-                <option value="Mayabeque">Mayabeque</option>
-                <option value="Isla de la Juventud">Isla de la Juventud</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="municipio">Municipio *</label>
-              <input type="text" id="municipio" name="municipio" required placeholder="Ej: Centro Habana">
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="whatsapp">WhatsApp (para verificación) *</label>
-            <input type="tel" id="whatsapp" name="whatsapp" required placeholder="5351234567 o +53 5 XXXXXXX" autocomplete="tel">
-            <small style="color: var(--gris-claro); font-size: 0.8125rem;">Formato: 5351234567 (sin + ni espacios)</small>
-          </div>
-          
-          <div class="form-group">
-            <label for="descripcion">Descripción breve</label>
-            <input type="text" id="descripcion" name="descripcion" placeholder="Ej: Comida cubana tradicional. Delivery en Centro Habana." maxlength="300">
-          </div>
-          
-          <button type="submit" class="btn btn-primary form-submit" id="submitBtn">
-            📝 Registrar mi negocio gratis
-          </button>
-          
-          <p class="form-note">Al registrarte aceptas nuestros <a href="#">Términos</a> y <a href="#">Política de Privacidad</a>. VerifiCuba no está afiliado al Gobierno de Cuba, ONAT ni ETECSA.</p>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <footer role="contentinfo">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-column footer-brand">
-          <a href="#" class="logo" style="color: white;">
-            <span class="logo-icon">✓</span>
-            <span>VerifiCuba</span>
-          </a>
-          <p>El directorio de negocios verificados para la nueva economía cubana. Hecho en 🇨🇺 por cubanos, para cubanos.</p>
-        </div>
-        
-        <div class="footer-column">
-          <h4>Producto</h4>
-          <ul>
-            <li><a href="#herramientas">Herramientas gratis</a></li>
-            <li><a href="#como-funciona">Cómo funciona</a></li>
-            <li><a href="#testimonios">Testimonios</a></li>
-            <li><a href="#registro">Registrar negocio</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h4>Recursos</h4>
-          <ul>
-            <li><a href="#">Guía Decreto 160</a></li>
-            <li><a href="#">Calculadora ONAT</a></li>
-            <li><a href="#">Guía impuestos TCP</a></li>
-            <li><a href="#">Blog</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h4>Legal</h4>
-          <ul>
-            <li><a href="#">Términos de uso</a></li>
-            <li><a href="#">Política de privacidad</a></li>
-            <li><a href="#">Cookies</a></li>
-            <li><a href="#">Contacto</a></li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="footer-bottom">
-        <p>© 2026 VerifiCuba. Hecho en 🇨🇺 para la nueva economía cubana.</p>
-        <div class="social-links">
-          <a href="#" aria-label="Telegram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></a>
-          <a href="#" aria-label="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></a>
-          <a href="#" aria-label="Email"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <div class="toast" id="toast" role="alert" aria-live="assertive">
-    <div class="toast-icon" id="toastIcon"></div>
-    <span id="toastMessage"></span>
+<!-- ══ HEADER ══ -->
+<header id="header">
+  <div class="container nav">
+    <a class="brand" href="#inicio"><img src="logo.png" alt="VerifiCuba">VerifiCuba</a>
+    <nav class="nav-links">
+      <a href="#problema">Por qué</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#herramientas">Herramientas</a>
+      <a href="#testimonios">Testimonios</a>
+    </nav>
+    <a href="#registro" class="btn btn-primary">Registrar mi negocio</a>
   </div>
+</header>
 
-  <script>
-    // Configuración PocketBase - CAMBIA ESTO EN PRODUCCIÓN
-    // const PB_URL = 'https://TU_TUNNEL.trycloudflare.com'; // Cambia cuando tengas tunnel
-    const PB_URL = 'http://localhost:8090';  // Funciona con CORS desde Netlify
+<!-- ══ HERO ══ -->
+<section class="hero" id="inicio">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow reveal"><i></i>Decreto 160 en vigor · 46 actividades liberadas</span>
+      <h1 class="reveal d1">El directorio de negocios <span class="grad">verificados</span> de Cuba</h1>
+      <p class="hero-sub reveal d2">Con el Decreto 160, miles de nuevos negocios están abriendo. ¿Cómo te van a encontrar tus clientes? Regístrate gratis, obtén tu badge de verificación y accede a herramientas fiscales gratuitas.</p>
+      <div class="hero-btns reveal d3">
+        <a href="#registro" class="btn btn-primary"><svg class="ic sm"><use href="#i-edit"/></svg>Registrar mi negocio gratis</a>
+        <a href="#como-funciona" class="btn btn-ghost">Ver cómo funciona</a>
+      </div>
+      <div class="hero-stats reveal d4">
+        <div class="hstat"><b><em data-count="12">0</em></b><span>Negocios</span></div>
+        <div class="hstat"><b><em data-count="8">0</em></b><span>Verificados</span></div>
+        <div class="hstat"><b><em data-count="12">0</em></b><span>Categorías</span></div>
+        <div class="hstat"><b><em>0%</em></b><span>Comisión</span></div>
+      </div>
+    </div>
+    <div class="stage reveal d2">
+      <div class="orb o1"></div><div class="orb o2"></div>
+      <div class="chip-f c1"><svg class="ic"><use href="#i-badge"/></svg>Verificado</div>
+      <div class="chip-f c2"><svg class="ic ic-fill"><use href="#i-star"/></svg>4.8 · 23 reseñas</div>
+      <div class="chip-f c3"><svg class="ic"><use href="#i-pin"/></svg>A 200 m de ti</div>
+      <article class="preview">
+        <div class="pv-head">
+          <div class="pv-av"><svg class="ic lg"><use href="#i-utensils"/></svg></div>
+          <div><h3>Paladar Doña Marta</h3><p>Centro Habana, La Habana</p></div>
+          <span class="pv-badge"><svg class="ic sm"><use href="#i-check"/></svg>Verificado</span>
+        </div>
+        <p class="pv-desc">Comida cubana tradicional. Almuerzo y cena. Delivery en Centro Habana.</p>
+        <div class="pv-meta">
+          <div><svg class="ic"><use href="#i-pin"/></svg>Calle 23 #456, Centro Habana</div>
+          <div><svg class="ic"><use href="#i-clock"/></svg>Lun–Sáb 11am–10pm</div>
+          <div><svg class="ic"><use href="#i-card"/></svg>Transfermóvil · EnZona · Efectivo</div>
+        </div>
+        <div class="pv-cta"><svg class="ic sm"><use href="#i-chat"/></svg>Escribir por WhatsApp</div>
+        <div class="pv-foot">
+          <span class="pv-stars"><span class="row"><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg></span>4.8</span>
+          <span class="pv-cat">Alimentación</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
 
-    // Mobile Menu
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const nav = document.getElementById('nav');
-    mobileMenuBtn?.addEventListener('click', () => {
-      const isOpen = nav.classList.toggle('open');
-      mobileMenuBtn.setAttribute('aria-expanded', isOpen);
-    });
+<!-- ══ MARQUEE ══ -->
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track">
+    <span class="mq-item"><svg class="ic"><use href="#i-utensils"/></svg>Gastronomía</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-wrench"/></svg>Talleres</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-scissors"/></svg>Belleza</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-home"/></svg>Construcción</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-truck"/></svg>Transporte</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-bag"/></svg>Comercio</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-code"/></svg>Servicios digitales</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-heart"/></svg>Salud</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-zap"/></svg>Energía</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-book"/></svg>Educación</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-leaf"/></svg>Agricultura</span><span class="mq-dot"></span>
+    <!-- duplicado para loop -->
+    <span class="mq-item"><svg class="ic"><use href="#i-utensils"/></svg>Gastronomía</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-wrench"/></svg>Talleres</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-scissors"/></svg>Belleza</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-home"/></svg>Construcción</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-truck"/></svg>Transporte</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-bag"/></svg>Comercio</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-code"/></svg>Servicios digitales</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-heart"/></svg>Salud</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-zap"/></svg>Energía</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-book"/></svg>Educación</span><span class="mq-dot"></span>
+    <span class="mq-item"><svg class="ic"><use href="#i-leaf"/></svg>Agricultura</span><span class="mq-dot"></span>
+  </div>
+</div>
 
-    // Smooth Scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          nav.classList.remove('open');
-          mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        }
-      });
-    });
+<!-- ══ PROBLEMA / SOLUCIÓN ══ -->
+<section id="problema">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="sec-tag">Por qué VerifiCuba</span>
+      <h2>El problema es real. <span class="grad">La solución también.</span></h2>
+      <p class="sec-sub">Miles de emprendedores cubanos pierden clientes todos los días por falta de visibilidad y confianza.</p>
+    </div>
+    <div class="vs-panel reveal">
+      <div class="vs-orb"><svg class="ic lg"><use href="#i-arrow"/></svg></div>
+      <div class="vs-col left">
+        <h3><svg class="ic"><use href="#i-search"/></svg>El problema hoy</h3>
+        <div class="vs-item"><div class="vs-ico"><svg class="ic"><use href="#i-search"/></svg></div><div><h4>No te encuentran</h4><p>Google Maps no tiene tu negocio. Los grupos de Facebook se pierden en 2 horas. Revolico es un mar de anuncios sin confianza.</p></div></div>
+        <div class="vs-item"><div class="vs-ico"><svg class="ic"><use href="#i-star"/></svg></div><div><h4>Sin reseñas verificadas</h4><p>Los clientes no saben en quién confiar. Un mal comentario anónimo te hunde. No hay forma de demostrar tu calidad.</p></div></div>
+        <div class="vs-item"><div class="vs-ico"><svg class="ic"><use href="#i-calc"/></svg></div><div><h4>Impuestos = dolor de cabeza</h4><p>¿Cuánto debes a la ONAT este mes? ¿Ventas 10%? ¿Territorial 5%? ¿DJ antes del 28 feb para 5% descuento? La ONAT no avisa, tú pagas multas.</p></div></div>
+        <div class="vs-item"><div class="vs-ico"><svg class="ic"><use href="#i-chat"/></svg></div><div><h4>WhatsApp = tu web</h4><p>Fotos borrosas, precios desactualizados, tardas 2 horas en responder. Cada pregunta sin respuesta = un cliente que se va.</p></div></div>
+      </div>
+      <div class="vs-col right">
+        <h3><svg class="ic"><use href="#i-badge"/></svg>Lo que da VerifiCuba</h3>
+        <div class="vs-item"><div class="vs-ico"><svg class="ic"><use href="#i-badge"/></svg></div><div><h4>Perfil verificado con badge</h4><p>Tu negocio aparece en búsquedas por categoría, provincia, municipio. Badge "Verificado" que genera confianza inmediata. SEO local real.</p></div></div>
+        <div class="vs-item"><div class="vs-ico"><svg class="ic"><use href="#i-star"/></svg></div><div><h4>Reseñas reales de clientes</h4><p>Solo clientes reales pueden reseñar. Cada reseña verificada = 10 clientes futuros gratis. Responde públicamente y demuestra profesionalidad.</p></div></div>
+        <div class="vs-item"><div class="vs-ico"><svg class="ic"><use href="#i-bell"/></svg></div><div><h4>Calculadora ONAT + Alertas</h4><p>Ingresa tus ventas → te decimos EXACTAMENTE qué debes (Ventas 10%, Territorial 5%, DJ, Seguridad Social). Alertas por WhatsApp días 15 y 30.</p></div></div>
+        <div class="vs-item"><div class="vs-ico"><svg class="ic"><use href="#i-file"/></svg></div><div><h4>Facturas en 3 clics + Dashboard</h4><p>Genera facturas PDF válidas. Registra ingresos/gastos. Ve tu balance semanal. Exporta reporte mensual para la ONAT. Todo gratis para fundadores.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // Header Scroll Effect
-    const header = document.getElementById('header');
-    window.addEventListener('scroll', () => {
-      header.style.boxShadow = window.scrollY > 20 ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none';
-    });
+<!-- ══ CÓMO FUNCIONA ══ -->
+<section id="como-funciona">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="sec-tag">Proceso</span>
+      <h2>En 3 pasos <span class="grad">estás dentro</span></h2>
+      <p class="sec-sub">Sin trámites complejos. Sin letra chica. En menos de 10 minutos tu negocio está verificado y visible.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal d1"><div class="step-num">1</div><h3><svg class="ic"><use href="#i-edit"/></svg>Regístrate</h3><p>Completa el formulario con los datos de tu negocio: nombre, categoría, ubicación, WhatsApp, tipo de actor (TCP/MIPYME).</p><time>2 MINUTOS</time></div>
+      <div class="step reveal d2"><div class="step-num">2</div><h3><svg class="ic"><use href="#i-shield"/></svg>Verificamos</h3><p>Te llamamos por WhatsApp (5 min). Confirmamos que existes: foto de fachada, licencia, ubicación. Badge "Verificado" en 24h.</p><time>24 HORAS</time></div>
+      <div class="step reveal d3"><div class="step-num">3</div><h3><svg class="ic"><use href="#i-trend"/></svg>Crece</h3><p>Tu perfil está vivo. Clientes te encuentran, te reseñan, te contactan. Herramientas fiscales gratis y 6 meses premium por ser fundador.</p><time>6 MESES GRATIS</time></div>
+    </div>
+  </div>
+</section>
 
-    // Toast
-    function showToast(message, type = 'success') {
-      const toast = document.getElementById('toast');
-      const toastIcon = document.getElementById('toastIcon');
-      const toastMessage = document.getElementById('toastMessage');
-      
-      toastMessage.textContent = message;
-      toast.className = 'toast show ' + type;
-      
-      toastIcon.innerHTML = type === 'success' 
-        ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>'
-        : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
-      
-      setTimeout(() => toast.classList.remove('show'), 4000);
-    }
+<!-- ══ HERRAMIENTAS (BENTO) ══ -->
+<section id="herramientas">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="sec-tag">Todo incluido</span>
+      <h2>Herramientas gratis <span class="grad">desde el día 1</span></h2>
+      <p class="sec-sub">No es solo un directorio. Es tu centro de operaciones. Todo incluido en tu plan fundador (6 meses gratis).</p>
+    </div>
+    <div class="bento">
+      <div class="b-card w2 reveal"><div class="b-ico"><svg class="ic lg"><use href="#i-file"/></svg></div><h3>Generador de Facturas PDF</h3><p>Crea facturas profesionales en 3 clics. Válidas para clientes y ONAT. Items, impuestos y totales automáticos. Descarga e imprime al instante.</p><div class="b-list"><span><svg class="ic"><use href="#i-check"/></svg>Items ilimitados</span><span><svg class="ic"><use href="#i-check"/></svg>Impuesto 10% automático</span><span><svg class="ic"><use href="#i-check"/></svg>PDF listo para imprimir</span><span><svg class="ic"><use href="#i-check"/></svg>Historial guardado</span></div></div>
+      <div class="b-card reveal d1"><div class="b-ico"><svg class="ic lg"><use href="#i-calc"/></svg></div><h3>Calculadora ONAT</h3><p>Ingresa tus ventas mensuales → te decimos EXACTAMENTE qué debes. Sin sorpresas.</p><div class="b-list"><span><svg class="ic"><use href="#i-check"/></svg>Ventas 10%</span><span><svg class="ic"><use href="#i-check"/></svg>Territorial 5% / 1%</span><span><svg class="ic"><use href="#i-check"/></svg>DJ 15–50%</span></div></div>
+      <div class="b-card reveal"><div class="b-ico"><svg class="ic lg"><use href="#i-bell"/></svg></div><h3>Calendario Fiscal + Alertas</h3><p>Nunca más olvides un vencimiento. Alertas automáticas por WhatsApp.</p><div class="b-list"><span><svg class="ic"><use href="#i-check"/></svg>Alerta día 15</span><span><svg class="ic"><use href="#i-check"/></svg>Alerta día 30</span><span><svg class="ic"><use href="#i-check"/></svg>Recordatorio DJ</span></div></div>
+      <div class="b-card w2 reveal d1"><div class="b-ico"><svg class="ic lg"><use href="#i-chart"/></svg></div><h3>Dashboard Financiero Simple</h3><p>Registra ingresos y gastos en segundos. Ve tu balance semanal/mensual. Gráficos de evolución. Exporta reporte mensual para la ONAT en un clic.</p><div class="b-list"><span><svg class="ic"><use href="#i-check"/></svg>Ingresos vs Gastos visual</span><span><svg class="ic"><use href="#i-check"/></svg>Balance neto semanal</span><span><svg class="ic"><use href="#i-check"/></svg>Exportar Excel/PDF</span><span><svg class="ic"><use href="#i-check"/></svg>Categorías personalizadas</span></div></div>
+      <div class="b-card w2 reveal"><div class="b-ico"><svg class="ic lg"><use href="#i-link"/></svg></div><h3>Enlace Directo a WhatsApp + Mapa</h3><p>Tu perfil tiene botón "Escribir por WhatsApp" y mapa integrado. Clientes te ubican, te escriben, compran. Sin fricción.</p><div class="b-list"><span><svg class="ic"><use href="#i-check"/></svg>Botón WhatsApp directo</span><span><svg class="ic"><use href="#i-check"/></svg>Mapa integrado</span><span><svg class="ic"><use href="#i-check"/></svg>Horario visible</span><span><svg class="ic"><use href="#i-check"/></svg>Métodos de pago visibles</span></div></div>
+      <div class="b-card reveal d1"><div class="b-ico"><svg class="ic lg"><use href="#i-trend"/></svg></div><h3>Estadísticas de tu Perfil</h3><p>Sabes cuánta gente te ve, cuántos clican WhatsApp, cuántos reseñan. Métricas reales.</p><div class="b-list"><span><svg class="ic"><use href="#i-check"/></svg>Visitas al perfil</span><span><svg class="ic"><use href="#i-check"/></svg>Clics a WhatsApp</span><span><svg class="ic"><use href="#i-check"/></svg>Reseñas nuevas</span></div></div>
+    </div>
+  </div>
+</section>
 
-    // Form Handling
-    const form = document.getElementById('registroForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const formSuccess = document.getElementById('formSuccess');
-    const formError = document.getElementById('formError');
+<!-- ══ TESTIMONIOS ══ -->
+<section id="testimonios">
+  <div class="container">
+    <div class="sec-head center reveal">
+      <span class="sec-tag">Prueba social</span>
+      <h2>Lo que dicen <span class="grad">los primeros</span></h2>
+      <p class="sec-sub">Negocios reales que ya confían en VerifiCuba para crecer.</p>
+    </div>
+    <div class="testis">
+      <div class="t-card reveal d1">
+        <div class="t-head"><div class="t-av a1">M</div><div><h4>Marta González</h4><span>Paladar Doña Marta · Centro Habana</span></div></div>
+        <blockquote>"Me registré el martes. El jueves ya tenía 3 clientes nuevos que dijeron 'te vi en VerifiCuba'. El badge de verificado hace que confíen antes de escribir."</blockquote>
+        <div class="t-foot"><span class="t-stars"><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg></span><span class="t-verif"><svg class="ic sm"><use href="#i-badge"/></svg>Verificada</span></div>
+      </div>
+      <div class="t-card reveal d2">
+        <div class="t-head"><div class="t-av a2">L</div><div><h4>Luis Ramírez</h4><span>Taller Eléctrico Luis · Playa</span></div></div>
+        <blockquote>"La calculadora de impuestos me ahorró horas de Excel. Ahora sé exactamente cuánto apartar cada mes para la ONAT. Me avisaron por WhatsApp el día 15 y el 30."</blockquote>
+        <div class="t-foot"><span class="t-stars"><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg></span><span class="t-verif"><svg class="ic sm"><use href="#i-badge"/></svg>Verificado</span></div>
+      </div>
+      <div class="t-card reveal d3">
+        <div class="t-head"><div class="t-av a3">A</div><div><h4>Ana Martínez</h4><span>Peluquería Ana · Marianao</span></div></div>
+        <blockquote>"Lo mejor: el badge de verificado. Los clientes confían antes de escribir. Y las facturas en 3 clics me quitan el dolor de cabeza de hacerlas a mano."</blockquote>
+        <div class="t-foot"><span class="t-stars"><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg><svg class="ic sm ic-fill"><use href="#i-star"/></svg></span><span class="t-verif"><svg class="ic sm"><use href="#i-badge"/></svg>Verificada</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // CORS Note
-    const corsNotice = document.createElement('p');
-    corsNotice.style.cssText = 'font-size:0.75rem;color:var(--naranja);text-align:center;margin-top:12px;padding:12px;background:var(--naranja-claro);border-radius:8px;';
-    corsNotice.innerHTML = '⚠️ <strong>Nota:</strong> El envío directo desde el navegador está bloqueado por CORS. <strong>Solución temporal:</strong> Escríbenos directo a <a href="https://wa.me/5351234567" style="color:var(--azul);">WhatsApp</a> con tus datos o email: <a href="mailto:hola@verificuba.com" style="color:var(--azul);">hola@verificuba.com</a>. Estamos configurando el proxy.';
-    corsNotice.style.fontSize = '0.8125rem';
-    document.querySelector('.cta-form').appendChild(corsNotice);
+<!-- ══ REGISTRO ══ -->
+<section id="registro">
+  <div class="container reg-wrap">
+    <div class="reg-ribbon reveal"><svg class="ic lg"><use href="#i-gift"/></svg>Oferta Fundadores: 6 meses Premium GRATIS para los primeros 50 negocios</div>
+    <div class="reg-panel reveal d1">
+      <div class="sec-head center" style="margin-bottom:38px">
+        <h2 style="font-size:clamp(1.6rem,3vw,2.2rem)">¿Listo para que <span class="grad">te encuentren?</span></h2>
+        <p class="sec-sub">Registro gratis · Verificación en 24h · Te contactamos por WhatsApp en menos de 24 horas.</p>
+      </div>
+      <form class="reg-form" id="regForm" novalidate>
+        <div class="f-group"><label>Nombre del negocio <b>*</b></label><input type="text" id="f-nombre" placeholder="Ej: Paladar Doña Marta" required></div>
+        <div class="f-group"><label>Tipo de actor <b>*</b></label><select id="f-tipo" required><option value="">Selecciona...</option><option value="TCP">TCP (Trabajador por Cuenta Propia)</option><option value="MIPYME">MIPYME</option><option value="CNA">CNA</option><option value="Estatal">Estatal</option></select></div>
+        <div class="f-group"><label>Categoría <b>*</b></label><select id="f-categoria" required><option value="">Selecciona...</option><option>Alimentación y Gastronomía</option><option>Talleres y Reparaciones</option><option>Belleza y Cuidado Personal</option><option>Construcción y Vivienda</option><option>Transporte y Logística</option><option>Comercio y Distribución</option><option>Servicios Digitales</option><option>Salud y Bienestar</option><option>Energía y Sostenibilidad</option><option>Educación y Formación</option><option>Agricultura y Ganadería</option><option>Otros Servicios</option></select></div>
+        <div class="f-group"><label>Provincia <b>*</b></label><select id="f-provincia" required><option value="">Selecciona...</option><option>La Habana</option><option>Matanzas</option><option>Santiago de Cuba</option><option>Holguín</option><option>Villa Clara</option><option>Camagüey</option><option>Granma</option><option>Las Tunas</option><option>Cienfuegos</option><option>Pinar del Río</option><option>Sancti Spíritus</option><option>Ciego de Ávila</option><option>Guantánamo</option><option>Artemisa</option><option>Mayabeque</option><option>Isla de la Juventud</option></select></div>
+        <div class="f-group"><label>Municipio <b>*</b></label><input type="text" id="f-municipio" placeholder="Ej: Centro Habana" required></div>
+        <div class="f-group"><label>WhatsApp <b>*</b></label><input type="tel" id="f-whatsapp" placeholder="535XXXXXXX" required></div>
+        <div class="f-group full"><label>Descripción breve</label><textarea id="f-descripcion" placeholder="¿Qué vendes? ¿A quién? ¿Qué te hace diferente?"></textarea></div>
+        <div class="f-check"><input type="checkbox" id="f-acepto" required><label for="f-acepto">Acepto que me contacten por WhatsApp para verificar mi negocio. VerifiCuba no comparte tus datos con terceros.</label></div>
+        <button type="submit" id="submitBtn" class="btn btn-primary"><svg class="ic sm"><use href="#i-edit"/></svg>Registrar mi negocio gratis</button>
+        <p class="reg-note">Al registrarte aceptas nuestros Términos y Política de Privacidad. VerifiCuba no está afiliado al Gobierno de Cuba, ONAT ni ETECSA.</p>
+      </form>
+      <div class="reg-success" id="regSuccess">
+        <div class="ico"><svg class="ic" style="width:40px;height:40px"><use href="#i-badge"/></svg></div>
+        <h3>¡Registro enviado!</h3>
+        <p>Hemos recibido tu pre-registro. Te contactaremos por WhatsApp en las próximas 24 horas para verificar tu negocio y activar tu perfil gratis.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // Form submission
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      // Validate
-      const requiredFields = form.querySelectorAll('[required]');
-      let valid = true;
-      requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-          field.style.borderColor = '#dc2626';
-          valid = false;
-        } else {
-          field.style.borderColor = '';
-        }
-      });
-      
-      if (!valid) {
-        showToast('Por favor completa todos los campos obligatorios', 'error');
-        return;
-      }
+<!-- ══ CTA STRIP ══ -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="strip reveal">
+      <div><h3>¿Aún no estás convencido?</h3><p>Escríbenos por WhatsApp y te mostramos VerifiCuba en 5 minutos, con ejemplos de negocios reales de tu zona.</p></div>
+      <a class="btn btn-primary" href="https://wa.me/535XXXXXXX?text=Hola%2C%20quiero%20conocer%20VerifiCuba" target="_blank"><svg class="ic sm"><use href="#i-chat"/></svg>Escríbenos</a>
+    </div>
+  </div>
+</section>
 
-      // WhatsApp format validation - flexible
-      let whatsapp = document.getElementById('whatsapp').value.trim();
-      // Normalizar: quitar +, espacios, guiones, paréntesis
-      whatsapp = whatsapp.replace(/[\s\-\(\)]/g, '').replace(/^\+53/, '53').replace(/^\+/, '');
-      // Validar: debe empezar con 535 y tener 10 dígitos totales
-      if (!/^535\d{7}$/.test(whatsapp)) {
-        showToast('Formato WhatsApp inválido. Usa: 5351234567, +53 5 XXXXXXX, o 535-XXX-XXXX', 'error');
-        return;
-      }
-      // Actualizar el campo con el valor normalizado
-      document.getElementById('whatsapp').value = whatsapp;
-      }
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#inicio"><img src="logo.png" alt="VerifiCuba">VerifiCuba</a>
+        <p>El directorio de negocios verificados para la nueva economía cubana. Hecho en Cuba, por cubanos, para cubanos.</p>
+      </div>
+      <div class="foot-col"><h4>Producto</h4><a href="#herramientas">Herramientas gratis</a><a href="#como-funciona">Cómo funciona</a><a href="#testimonios">Testimonios</a><a href="#registro">Registrar negocio</a></div>
+      <div class="foot-col"><h4>Recursos</h4><a href="#">Guía Decreto 160</a><a href="#">Calculadora ONAT</a><a href="#">Guía impuestos TCP</a><a href="#">Blog</a></div>
+      <div class="foot-col"><h4>Legal</h4><a href="#">Términos de uso</a><a href="#">Política de privacidad</a><a href="#">Cookies</a><a href="#">Contacto</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 VerifiCuba. Todos los derechos reservados.</span>
+      <span>Para la nueva economía cubana</span>
+    </div>
+    <p class="foot-disc">VerifiCuba es una plataforma privada de apoyo al emprendimiento. No está afiliada al Gobierno de Cuba, la ONAT, ETECSA ni ninguna entidad estatal. La información fiscal es orientativa.</p>
+  </div>
+</footer>
 
-      // Submit
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Enviando...';
-      formError.classList.remove('show');
-      formError.textContent = '';
+<a href="https://wa.me/535XXXXXXX?text=Hola%2C%20quiero%20registrar%20mi%20negocio%20en%20VerifiCuba" target="_blank" class="wa-float" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+<div id="toast" role="status"></div>
 
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-      data.estado = 'Pendiente';
-      data.plan = 'Básico';
-
-      try {
-        const res = await fetch('http://localhost:8090/api/collections/negocios/records', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-
-        if (res.ok) {
-          form.classList.add('hidden');
-          formSuccess.classList.add('show');
-          submitBtn.style.display = 'none';
-          showToast('¡Registro enviado! Te contactaremos por WhatsApp en 24h.', 'success');
-        } else {
-          const err = await res.json();
-          throw new Error(err.message || 'Error al registrar');
-        }
-      } catch (err) {
-        console.error('Form error:', err);
-        formError.textContent = 'Error de conexión (CORS). Por ahora, escríbenos directo a WhatsApp: +53 5XXXXXXX o email: hola@verificuba.com';
-        formError.classList.add('show');
-        showToast('Error de conexión. Escríbenos por WhatsApp directo.', 'error');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = '📝 Registrar mi negocio gratis';
-      }
-    });
-
-    // Animation on Scroll
-    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, observerOptions);
-
-    document.querySelectorAll('.ps-item, .step, .tool-card, .testimonial').forEach(el => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(20px)';
-      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      observer.observe(el);
-    });
-
-    console.log('🇨🇺 VerifiCuba landing page loaded');
-  </script>
+<script>
+var PB_URL='http://localhost:8090';
+// header
+var header=document.getElementById('header');
+addEventListener('scroll',function(){header.classList.toggle('scrolled',scrollY>40)},{passive:true});
+// reveals
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+// counters
+function counters(){document.querySelectorAll('[data-count]').forEach(function(c){var t=+c.getAttribute('data-count'),cur=0,inc=Math.max(t/40,.1);var tm=setInterval(function(){cur+=inc;if(cur>=t){c.textContent=t;clearInterval(tm)}else c.textContent=Math.floor(cur)},45)})}
+var ho=new IntersectionObserver(function(es){if(es[0].isIntersecting){counters();ho.disconnect()}},{threshold:.4});
+var hs=document.querySelector('.hero-stats');if(hs)ho.observe(hs);
+// toast
+var toast=document.getElementById('toast'),tt;
+function showToast(m){toast.textContent=m;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show')},2800)}
+// form
+function slugify(s){return (s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'negocio')+'-'+Date.now().toString(36)}
+function categoriaId(nombre){
+  return fetch(PB_URL+'/api/collections/categorias/records?perPage=200')
+  .then(function(r){if(!r.ok)return null;return r.json()})
+  .then(function(d){var m=d.items.filter(function(c){return c.nombre===nombre})[0];return m?m.id:null})
+  .catch(function(){return null});
+}
+document.getElementById('regForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var nombre=document.getElementById('f-nombre').value.trim(),tipo=document.getElementById('f-tipo').value,
+      categoria=document.getElementById('f-categoria').value,
+      provincia=document.getElementById('f-provincia').value,municipio=document.getElementById('f-municipio').value.trim(),
+      whatsapp=document.getElementById('f-whatsapp').value.trim(),acepta=document.getElementById('f-acepto').checked;
+  if(!nombre||!tipo||!categoria||!provincia||!municipio||!whatsapp){showToast('Por favor completa todos los campos obligatorios.');return}
+  if(!acepta){showToast('Debes aceptar que te contactemos por WhatsApp.');return}
+  var btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Enviando...';
+  var data={nombre:nombre,tipo_actor:tipo,provincia:provincia,municipio:municipio,whatsapp:whatsapp,
+    descripcion:document.getElementById('f-descripcion').value.trim(),estado:'Pendiente',plan:'Básico',slug:slugify(nombre)};
+  categoriaId(categoria).then(function(id){
+    if(id)data.categoria=id;
+    return fetch(PB_URL+'/api/collections/negocios/records',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  })
+  .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
+  .then(function(){document.getElementById('regForm').style.display='none';document.getElementById('regSuccess').classList.add('show');showToast('¡Registro enviado! Te contactaremos pronto.')})
+  .catch(function(){btn.disabled=false;btn.textContent='Registrar mi negocio gratis';showToast('Error de conexión. Escríbenos directo por WhatsApp.')});
+});
+// smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}})});
+</script>
 </body>
 </html>
