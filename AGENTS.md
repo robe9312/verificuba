@@ -4,9 +4,9 @@
 
 VerifiCuba: a Cuban business directory ("negocios verificados"). Four components that share the `negocios` concept but are NOT in sync:
 
-- `~/verificuba/landing/index.html` — single static `index.html` (inline CSS/JS, no build step). Deployed to Netlify at `https://verificuba.netlify.app`. The `#regForm` submits directly to PocketBase REST API (`/api/collections/negocios/records`) via CORS (configured with `--origins="https://verificuba.netlify.app"`). No build step, no build step.
+- `~/verificuba/landing/index.html` — single static `index.html` (inline CSS/JS, no build step). Deployed to Netlify at `https://verificuba.netlify.app`. The `#regForm` submits directly to PocketBase REST API (`/api/collections/negocios/records`) via CORS (configured with `--origins="https://verificuba.netlify.app"`). No build step.
 - `~/verificuba-new/telegram-bot/` — Node ESM (telegraf + axios + express), runs in Docker/podman. Queries **PocketBase** (not NocoDB) via REST API at `http://localhost:8090/api/collections/...` with admin token. Does NOT touch NocoDB.
-- `~/verificuba/mcp_server.py` — Python FastMCP (stdio) talking to **PocketBase** REST at `http://localhost:8090`. 
+- `~/verificuba/mcp_server.py` — Python FastMCP (stdio) talking to **PocketBase** REST at `http://localhost:8090`.
 - `~/verificuba/pocketbase` binary + `~/verificuba/pb_data/` + `~/verificuba/pb_migrations/` — the local backend that is actually live.
 
 **Two backends exist in parallel but ONLY PocketBase is live:** PocketBase (binary, live on :8090 with SQLite). NocoDB (docker) is NOT running. Changes to one do not affect the other. Ask before assuming which store a task targets.
@@ -14,14 +14,22 @@ VerifiCuba: a Cuban business directory ("negocios verificados"). Four components
 ## Commands
 
 - PocketBase (the live backend): `./pocketbase serve --http=0.0.0.0:8090 --dir=./pb_data --origins="https://verificuba.netlify.app,http://localhost:8000"` → API on :8090, admin UI at `http://localhost:8090/_/`. JS migrations in `pb_migrations/` auto-apply on serve.
-- **Public exposure = Tailscale Funnel (stable URL, no domain).** `tailscaled` (system service) + `tailscale funnel --bg 8090` (operator=rohdinn) exposes PocketBase at `https://fedora.taile44d23.ts.net` → `127.0.0.1:8090`. PB_URL points there. URL never changes; no redeploy on reboot.
-  - **Critical networking quirk (Cuba/ETECSA + Cloudflare WARP):** the ISP blocks direct access to Tailscale's control plane/DERP. WARP (`warp-svc`, always on) tunnels them — but ONLY traffic not marked `fwmark 0x100cf`, and tailscaled marks its own traffic `0x80000` → routed via the main table → direct → blocked. Fix: `ip rule add fwmark 0x80000/0xff0000 lookup 65743 pref 5199`. `warp-keepalive.service` (root) re-adds it every 30s (loop also keeps WARP Connected), so it survives reboots/WARP refreshes.
-  - If Funnel/tailscale breaks: check `ip rule | grep 5199` (re-add if missing), `systemctl is-active tailscaled warp-svc`, `tailscale funnel status`, `curl https://fedora.taile44d23.ts.net/api/health`.
-  - Former quick-tunnel solution (`scripts/tunnel-sync.sh` + user service `verificuba-tunnel`, random trycloudflare URL + auto-push) is **disabled** — keep only as manual fallback if Funnel ever fails.
-  - To enable Funnel on a fresh tailnet (one-time, browser): `tailscale funnel --bg 8090` prints an enable URL → click Enable → rerun. Admin UI: `https://login.tailscale.com/admin`.
+
+- **Public exposure = Cloudflare quick tunnel (working, auto-repairing).** `cloudflared tunnel --url http://localhost:8090` exposes PocketBase at a random `https://<id>.trycloudflare.com`. `scripts/tunnel-sync.sh` runs as systemd user service `verificuba-tunnel`, detects the new URL on each restart, updates `PB_URL` in `~/verificuba-new/landing/index.html`, commits and pushes → Netlify redeploys. Log: `~/verificuba/logs/tunnel.log`. Restart: `systemctl --user restart verificuba-tunnel`; status: `systemctl --user status verificuba-tunnel`. Linger enabled, survives reboot. **The quick-tunnel URL is random per restart — never hardcode it; let the script manage it.**
+
+- **Tailscale Funnel is NOT working in this network.** `tailscale funnel --bg 8090` configures OK, but DERP relay fails through Cloudflare WARP (UDP blocked, DERP resets, no IPv4, netcheck shows DERP unknown). The fwmark fix (pref 5199) routes tailscaled traffic through WARP but does NOT fix DERP relay. Funnel URL `https://fedora.taile44d23.ts.net` is configured but not publicly reachable. Keep as potential future option if network changes.
+
+- **Critical networking quirk (Cuba/ETECSA + Cloudflare WARP):** WARP (`warp-svc`, always on) provides internet access. ISP blocks direct Tailscale control plane/DERP. WARP routes non-marked traffic (`fwmark 0x100cf` bypass) through its tunnel. tailscaled marks its own traffic `0x80000` → routed via main table → direct → blocked. Fix `ip rule add fwmark 0x80000/0xff0000 lookup 65743 pref 5199` routes tailscaled traffic through WARP (allows control plane auth), but **does not fix DERP relay** (DERP still resets). `warp-keepalive.service` (root) re-adds rule every 30s + keeps WARP connected, survives reboots.
+
+- If cloudflare tunnel breaks: check `systemctl --user status verificuba-tunnel`, `~/verificuba/scripts/tunnel-sync.sh` manually, `curl <current_trycloudflare_url>/api/health`.
+- To get a fresh tunnel URL: `pkill cloudflared; cloudflared tunnel --url http://localhost:8090 --no-autoupdate` → wait for URL → run `~/verificuba/scripts/tunnel-sync.sh` or wait for service.
+
 - MCP server: `python3 mcp_server.py` (needs `pip install mcp httpx`; both already installed). Env: `POCKETBASE_URL` (default `http://localhost:8090`), `POCKETBASE_ADMIN_EMAIL`, `POCKETBASE_ADMIN_PASSWORD`. Runs on stdio.
+
 - Telegram bot: `cd ~/verificuba-new && podman build -t verificuba-telegram-bot ./telegram-bot && podman run -d --name verificuba-telegram-bot --network host -e BOT_TOKEN=... -e CHAT_ID=... -e PB_URL=http://localhost:8090 -e PB_ADMIN_EMAIL=... -e PB_ADMIN_PASS=... verificuba-telegram-bot`
+
 - Docker stack (not currently used): `docker compose up` would start NocoDB (:8080) + telegram-bot but NocoDB is NOT running.
+
 - `scripts/backup-now.sh` is **stale/broken**: it `docker compose exec postgres pg_dump`s, but PocketBase uses SQLite (single file `pb_data/data.db`). Backup = `cp pb_data/data.db pb_data/data.db.bak`. Fix before using.
 
 ## Data model (PocketBase)
@@ -51,3 +59,32 @@ Access rules: `negocios.listRule` exposes only `estado = 'Verificado' || estado 
 - Telegram bot code at `~/verificuba-new/telegram-bot/` (Dockerfile, package.json, index.js) uses PocketBase REST API, NOT NocoDB.
 - MCP server at `~/verificuba/mcp_server.py` (FastMCP, stdio) talks to PocketBase REST API.
 - NocoDB is NOT running. Only PocketBase is live.
+
+## Network / troubleshooting quick reference
+
+```
+# Check cloudflare tunnel status
+systemctl --user status verificuba-tunnel
+tail -f ~/verificuba/logs/tunnel.log
+
+# Check current PB_URL in deployed landing
+curl -s https://verificuba.netlify.app | grep PB_URL
+
+# Manual tunnel refresh (if auto-sync stuck)
+pkill cloudflared
+cloudflared tunnel --url http://localhost:8090 --no-autoupdate > /tmp/cf.log 2>&1 &
+sleep 8
+grep -oE 'https://[a-z0-9-]+\.trycloudflare\.com' /tmp/cf.log | head -1
+
+# Check PocketBase health via current tunnel
+curl -s $(curl -s https://verificuba.netlify.app | grep -oE "PB_URL\s*=\s*['\"][^'\"]*" | cut -d"'" -f2)/api/health
+
+# WARP/DERP diagnostics (if debugging Tailscale)
+warp-cli status
+tailscale netcheck
+tailscale status
+```
+
+## Admin credentials
+
+PocketBase admin: `arangorobe380@gmail.com` / password in `~/.hermes/skills/offline-first/pocketbase-business-directory/scripts/seed-categories.sh` (rotate after exposing admin via any public tunnel).
