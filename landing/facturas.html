@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Facturas PDF — VerifiCuba</title>
+<meta name="description" content="Crea facturas profesionales en 3 clics. Válidas para clientes y ONAT. Items, impuestos y totales automáticos. Descarga e imprime al instante. Gratis, sin registro.">
+<link rel="canonical" href="https://verificuba.netlify.app/facturas.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://verificuba.netlify.app/facturas.html">
+<meta property="og:title" content="Generador de Facturas PDF — VerifiCuba">
+<meta property="og:description" content="Crea facturas profesionales en 3 clics. Válidas para clientes y ONAT. Impuesto 10% automático. Descarga e imprime al instante.">
+<meta property="og:image" content="https://verificuba.netlify.app/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Generador de Facturas PDF — VerifiCuba">
+<meta name="twitter:description" content="Facturas en 3 clics. Impuesto 10% automático. Descarga e imprime al instante. Gratis.">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/dm-sans@latest/700.css">
+<style>
+:root{
+  --bg:#0a0f1e; --ink:#eef2ff; --muted:#94a3b8; --muted2:#64748b;
+  --green:#22c55e; --emerald:#34d399; --teal:#2dd4bf; --cyan:#22d3ee;
+  --amber:#fbbf24; --red:#f87171;
+  --glass:rgba(255,255,255,.04); --glass2:rgba(255,255,255,.06); --line:rgba(255,255,255,.09);
+  --r-lg:28px; --r-md:18px; --r-sm:12px;
+  --fd:'DM Sans',sans-serif; --fb:'Inter',system-ui,sans-serif;
+  --eo:cubic-bezier(.22,1,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+.container{width:min(1100px,92%);margin:0 auto}
+.canvas{position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(900px 500px at 85% -5%,rgba(45,212,191,.10),transparent 60%),
+  radial-gradient(800px 520px at -10% 30%,rgba(34,197,94,.08),transparent 60%),
+  radial-gradient(700px 500px at 70% 70%,rgba(34,211,238,.05),transparent 60%),
+  var(--bg)}
+header{position:sticky;top:0;z-index:50;background:rgba(10,15,30,.75);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);padding:14px 0}
+.nav{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-weight:700;font-size:1.15rem}
+.brand img{width:32px;height:32px;border-radius:9px;background:#f8fafc;padding:3px}
+.back{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:6px;transition:.25s}
+.back:hover{color:var(--emerald)}
+.hero{padding:56px 0 16px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--emerald);background:rgba(34,197,94,.08);border:1px solid rgba(52,211,153,.3);padding:8px 16px;border-radius:999px;margin-bottom:22px}
+h1{font-family:var(--fd);font-size:clamp(2rem,4.5vw,3rem);font-weight:700;letter-spacing:-.02em;line-height:1.12;margin-bottom:16px}
+h1 .grad{background:linear-gradient(92deg,var(--emerald),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--muted);max-width:620px;margin:0 auto;font-size:1.02rem}
+.disclaimer{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.3);border-radius:var(--r-md);padding:12px 16px;font-size:.82rem;color:#fde68a;display:flex;gap:10px;align-items:flex-start;margin:20px auto 28px;max-width:760px}
+.disclaimer svg{flex:none;margin-top:2px}
+.grid{display:grid;grid-template-columns:1fr 1.15fr;gap:26px;margin:28px 0 20px;align-items:start}
+.panel{background:linear-gradient(165deg,var(--glass2),var(--glass));border:1px solid var(--line);border-radius:var(--r-lg);backdrop-filter:blur(16px);padding:28px}
+.panel h3{font-family:var(--fd);font-size:1.1rem;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:9px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.field label .hint{font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted2)}
+.field input,.field select,.field textarea{width:100%;background:rgba(10,15,30,.5);border:1px solid var(--line);border-radius:var(--r-sm);padding:13px 15px;color:var(--ink);font-size:.95rem;font-family:var(--fb);outline:none;transition:.25s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--emerald);box-shadow:0 0 0 4px rgba(52,211,153,.12)}
+.field textarea{resize:vertical;min-height:70px}
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:14px 24px;border-radius:999px;font-weight:800;font-size:.88rem;transition:.3s var(--eo);border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--teal));color:#04150b;box-shadow:0 8px 30px rgba(34,197,94,.35)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(34,197,94,.5)}
+.btn-ghost{background:var(--glass);border:1px solid var(--line);color:var(--ink);backdrop-filter:blur(10px)}
+.btn-ghost:hover{border-color:rgba(45,212,191,.5);color:var(--teal);transform:translateY(-3px)}
+/* Preview */
+.preview{background:linear-gradient(165deg,var(--glass2),var(--glass));border:1px solid var(--line);border-radius:var(--r-lg);backdrop-filter:blur(16px);overflow:hidden}
+.preview-head{background:rgba(255,255,255,.03);border-bottom:1px solid var(--line);padding:18px 24px;display:flex;justify-content:space-between;align-items:center}
+.preview-head h3{font-family:var(--fd);font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.invoice-doc{padding:32px;background:#fff;color:#0a0f1e;font-family:var(--fb);max-width:none}
+@media print{
+  body *{visibility:hidden}
+  .invoice-doc, .invoice-doc *{visibility:visible}
+  .invoice-doc{position:absolute;left:0;top:0;width:100%;padding:40px;background:#fff;color:#0a0f1e}
+  header,.hero,.grid,.disclaimer,.actions,.preview-head,.no-print{display:none!important}
+  .canvas{display:none!important}
+}
+.invoice-header{display:flex;justify-content:space-between;margin-bottom:28px;border-bottom:2px solid #0a0f1e;padding-bottom:16px}
+.invoice-title{font-family:var(--fd);font-size:1.6rem;font-weight:700;color:#0a0f1e}
+.invoice-meta{display:flex;flex-direction:column;gap:4px;text-align:right;font-size:.85rem;color:#64748b}
+.invoice-meta .label{font-weight:700;color:#0a0f1e}
+.from-to{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:28px}
+.block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:18px}
+.block-title{font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:10px}
+.block .name{font-weight:700;font-size:1.05rem;color:#0a0f1e;margin-bottom:6px}
+.block .detail{font-size:.85rem;color:#64748b;line-height:1.6}
+.items-table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:.9rem}
+.items-table th{text-align:left;padding:12px 16px;background:#0a0f1e;color:#fff;font-weight:700;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase}
+.items-table td{padding:12px 16px;border-bottom:1px solid #e2e8f0}
+.items-table td:last-child{text-align:right}
+.items-table tfoot td{padding-top:16px;font-weight:700;color:#0a0f1e}
+.items-table tfoot .total-row{font-size:1.1rem;background:#f8fafc}
+.totals{display:flex;flex-direction:column;gap:8px;max-width:360px;margin-left:auto}
+.totals .row{display:flex;justify-content:space-between;padding:8px 0}
+.totals .row.total{font-size:1.2rem;font-weight:800;color:#0a0f1e;border-top:2px solid #0a0f1e;padding-top:12px;margin-top:4px}
+.tax-note{font-size:.75rem;color:#64748b;margin-top:8px;padding:10px;background:#fef3c7;border:1px solid #fbbf24;border-radius:8px}
+.footer-note{margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:.8rem;color:#64748b;text-align:center}
+.no-print{display:none}
+@media(max-width:860px){.grid{grid-template-columns:1fr}.panel{padding:22px}.from-to{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="canvas"></div>
+
+<header><div class="container nav">
+  <a class="brand" href="/"><img src="logo.png" alt="VerifiCuba">VerifiCuba</a>
+  <a class="back" href="/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver al inicio</a>
+</div></header>
+
+<section class="hero container">
+  <span class="eyebrow">📄 Herramienta gratuita</span>
+  <h1>Generador de <span class="grad">Facturas PDF</span></h1>
+  <p class="hero-sub">Crea facturas profesionales en 3 clics. Válidas para clientes y ONAT. Impuesto 10% automático, nº autogenerado, descarga e imprime al instante. Sin registro, funciona offline.</p>
+  <div class="disclaimer">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    <span><b>Orientativo.</b> Verifica requisitos ONAT actuales antes de emitir. VerifiCuba no está afiliada a la ONAT.</span>
+  </div>
+</section>
+
+<section class="container">
+  <div class="grid">
+    <!-- INPUTS -->
+    <div class="panel">
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg>Datos de tu negocio</h3>
+      <div class="field"><label>Nombre / Razón social</label><input type="text" id="bizNombre" placeholder="Ej: Paladar Doña Marta"></div>
+      <div class="field"><label>Tipo de actor</label><select id="bizTipo"><option value="TCP">TCP (Trabajador por Cuenta Propia)</option><option value="MIPYME">MIPYME</option><option value="CNA">CNA</option><option value="Estatal">Estatal</option></select></div>
+      <div class="field"><label>Dirección</label><input type="text" id="bizDireccion" placeholder="Calle, número, municipio, provincia"></div>
+      <div class="field"><label>Teléfono / WhatsApp</label><input type="tel" id="bizTelefono" placeholder="535XXXXXXX"></div>
+
+      <h3 style="margin-top:24px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Datos del cliente</h3>
+      <div class="field"><label>Nombre / Razón social</label><input type="text" id="cliNombre" placeholder="Ej: Empresa XYZ S.A."></div>
+      <div class="field"><label>Dirección</label><input type="text" id="cliDireccion" placeholder="Dirección del cliente"></div>
+
+      <h3 style="margin-top:24px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Ítems</h3>
+      <div class="field"><label>Descripción</label><input type="text" id="itemDesc" placeholder="Ej: Almuerzo completo × 10"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field"><label>Cantidad</label><input type="number" id="itemCant" min="1" step="1" value="1"></div>
+        <div class="field"><label>Precio unitario (CUP)</label><input type="number" id="itemPrecio" min="0" step="0.01" placeholder="0.00"></div>
+      </div>
+      <button type="button" class="btn btn-primary" style="width:100%" id="addItem">➕ Añadir ítem</button>
+
+      <h3 style="margin-top:24px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Factura</h3>
+      <div class="field"><label>Fecha</label><input type="date" id="facturaFecha"></div>
+      <div class="field"><label>Nº de factura <span class="hint">— autogenerado</span></label><input type="text" id="facturaNumero" readonly placeholder="Se genera al añadir primer ítem"></div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="btnPreview">👁️ Vista previa</button>
+        <button type="button" class="btn btn-ghost" id="btnPrint">🖨️ Imprimir / PDF</button>
+      </div>
+      <p style="margin-top:14px;font-size:.78rem;color:var(--muted);text-align:center">El historial se guarda en tu navegador (localStorage).</p>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview">
+      <div class="preview-head">
+        <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Vista previa de la factura</h3>
+        <div class="no-print" style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" id="btnPrint2">🖨️ Imprimir / PDF</button>
+        </div>
+      </div>
+      <div class="invoice-doc" id="invoiceDoc">
+        <p style="text-align:center;color:#64748b;padding:60px 20px;font-size:1.1rem">Completa los datos y pulsa <b>Vista previa</b> para generar la factura.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin:40px 0 60px;background:linear-gradient(135deg,rgba(34,197,94,.16),rgba(45,212,191,.10));border:1px solid rgba(52,211,153,.3);border-radius:var(--r-lg);padding:34px;text-align:center">
+    <h3 style="font-family:var(--fd);font-size:1.3rem;font-weight:700;margin-bottom:8px">¿Quieres que tus facturas tengan tu badge verificado?</h3>
+    <p style="color:var(--muted);font-size:.92rem;margin-bottom:20px">Registra tu negocio en VerifiCuba gratis. Te verificamos en 24h, badge de confianza, calculadora ONAT, alertas por WhatsApp y facturación con tu perfil autollenado.</p>
+    <a class="btn-primary" href="/#registro">📝 Registrar mi negocio gratis</a>
+  </div>
+</section>
+
+<footer><div class="container">
+  Facturas PDF · <a href="/">VerifiCuba</a> · <a href="/calculadora">Calculadora ONAT</a> · <a href="/#registro">Registrar negocio</a><br>
+  Hecho en 🇨🇺 para la nueva economía cubana · Herramienta orientativa
+</div></footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   GENERADOR DE FACTURAS — Zero dependencies, window.print()
+   ════════════════════════════════════════════════════════════ */
+
+const $ = id => document.getElementById(id);
+const fmtCUP = n => new Intl.NumberFormat('es-CU',{style:'currency',currency:'CUP',minimumFractionDigits:2}).format(n);
+
+// Estado
+let items = [];
+let history = JSON.parse(localStorage.getItem('verificuba_facturas')||'[]');
+
+// Utilidades
+function genFacturaNum(){
+  const now = new Date();
+  const y = now.getFullYear().toString().slice(-2);
+  const m = String(now.getMonth()+1).padStart(2,'0');
+  const d = String(now.getDate()).padStart(2,'0');
+  const r = Math.random().toString(36).substring(2,6).toUpperCase();
+  return `FC-${y}${m}${d}-${r}`;
+}
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+
+// Inicialización
+$('facturaFecha').value = todayISO();
+
+// Render items table
+function renderItems(){
+  const tbody = $('itemsBody');
+  if(!tbody) return;
+  if(items.length===0){
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#64748b;padding:40px">Sin ítems. Añade el primero arriba.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = items.map((it,i)=>`<tr>
+    <td>${i+1}</td>
+    <td>${it.desc}</td>
+    <td style="text-align:center">${it.cant}</td>
+    <td style="text-align:right">${fmtCUP(it.precio)}</td>
+    <td style="text-align:right">${fmtCUP(it.subtotal)}</td>
+  </tr>`).join('');
+  updateTotals();
+}
+
+// Totales
+function updateTotals(){
+  const subtotal = items.reduce((s,it)=>s+it.subtotal,0);
+  const iva = subtotal * 0.10;
+  const total = subtotal + iva;
+  const tfoot = $('itemsTfoot');
+  if(tfoot){
+    tfoot.innerHTML = `
+      <tr><td colspan="4" style="text-align:right">Subtotal</td><td style="text-align:right">${fmtCUP(subtotal)}</td></tr>
+      <tr><td colspan="4" style="text-align:right">Impuesto 10%</td><td style="text-align:right">${fmtCUP(iva)}</td></tr>
+      <tr class="total-row"><td colspan="4">Total</td><td style="text-align:right">${fmtCUP(total)}</td></tr>
+    `;
+  }
+}
+
+// Build invoice document
+function buildInvoice(){
+  const biz = {
+    nombre: $('bizNombre').value || 'Mi Negocio',
+    tipo: $('bizTipo').value,
+    direccion: $('bizDireccion').value,
+    telefono: $('bizTelefono').value
+  };
+  const cli = {
+    nombre: $('cliNombre').value || 'Cliente',
+    direccion: $('cliDireccion').value
+  };
+  const fecha = $('facturaFecha').value || todayISO();
+  const numero = $('facturaNumero').value || genFacturaNum();
+
+  const subtotal = items.reduce((s,it)=>s+it.subtotal,0);
+  const iva = subtotal * 0.10;
+  const total = subtotal + iva;
+
+  const rows = items.map((it,i)=>`<tr>
+    <td style="text-align:center;padding:12px 16px;border-bottom:1px solid #e2e8f0">${i+1}</td>
+    <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0">${it.desc}</td>
+    <td style="text-align:center;padding:12px 16px;border-bottom:1px solid #e2e8f0">${it.cant}</td>
+    <td style="text-align:right;padding:12px 16px;border-bottom:1px solid #e2e8f0">${fmtCUP(it.precio)}</td>
+    <td style="text-align:right;padding:12px 16px;border-bottom:1px solid #e2e8f0">${fmtCUP(it.subtotal)}</td>
+  </tr>`).join('');
+
+  return `
+    <div class="invoice-header">
+      <div class="invoice-title">FACTURA</div>
+      <div class="invoice-meta">
+        <span class="label">Nº ${numero}</span>
+        <span class="label">Fecha: ${new Date(fecha).toLocaleDateString('es-CU')}</span>
+      </div>
+    </div>
+    <div class="from-to">
+      <div class="block">
+        <div class="block-title">Emisor</div>
+        <div class="name">${biz.nombre}</div>
+        <div class="detail">${biz.tipo}</div>
+        <div class="detail">${biz.direccion}</div>
+        <div class="detail">${biz.telefono}</div>
+      </div>
+      <div class="block">
+        <div class="block-title">Cliente</div>
+        <div class="name">${cli.nombre}</div>
+        <div class="detail">${cli.direccion}</div>
+      </div>
+    </div>
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width:50px">#</th>
+          <th>Descripción</th>
+          <th style="width:80px;text-align:center">Cant.</th>
+          <th style="width:140px;text-align:right">Precio</th>
+          <th style="width:140px;text-align:right">Importe</th>
+        </tr>
+      </thead>
+      <tbody id="itemsBody">${items.map((it,i)=>`<tr>
+        <td style="text-align:center;padding:12px 16px;border-bottom:1px solid #e2e8f0">${i+1}</td>
+        <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0">${it.desc}</td>
+        <td style="text-align:center;padding:12px 16px;border-bottom:1px solid #e2e8f0">${it.cant}</td>
+        <td style="text-align:right;padding:12px 16px;border-bottom:1px solid #e2e8f0">${fmtCUP(it.precio)}</td>
+        <td style="text-align:right;padding:12px 16px;border-bottom:1px solid #e2e8f0">${fmtCUP(it.subtotal)}</td>
+      </tr>`).join('')}</tbody>
+      <tfoot id="itemsTfoot">
+        <tr><td colspan="4" style="text-align:right;padding:12px 16px">Subtotal</td><td style="text-align:right;padding:12px 16px">${fmtCUP(items.reduce((s,it)=>s+it.subtotal,0))}</td></tr>
+        <tr><td colspan="4" style="text-align:right;padding:12px 16px">Impuesto 10%</td><td style="text-align:right;padding:12px 16px">${fmtCUP(items.reduce((s,it)=>s+it.subtotal,0)*0.10)}</td></tr>
+        <tr class="total-row"><td colspan="4" style="padding:12px 16px">Total</td><td style="text-align:right;padding:12px 16px">${fmtCUP(items.reduce((s,it)=>s+it.subtotal,0)*1.10)}</td></tr>
+      </tfoot>
+    </table>
+    <div class="totals">
+      <div class="row"><span>Subtotal</span><span>${fmtCUP(items.reduce((s,it)=>s+it.subtotal,0))}</span></div>
+      <div class="row"><span>Impuesto 10%</span><span>${fmtCUP(items.reduce((s,it)=>s+it.subtotal,0)*0.10)}</span></div>
+      <div class="row total"><span>Total</span><span>${fmtCUP(items.reduce((s,it)=>s+it.subtotal,0)*1.10)}</span></div>
+    </div>
+    <div class="tax-note"><strong>Nota:</strong> Impuesto sobre las Ventas 10% incluido. Esta factura es orientativa; verifica requisitos ONAT vigentes.</div>
+    <div class="footer-note">Generado con VerifiCuba · <a href="https://verificuba.netlify.app">verificuba.netlify.app</a></div>
+  `;
+}
+
+// Eventos
+$('addItem').addEventListener('click',()=>{
+  const desc = $('itemDesc').value.trim();
+  const cant = parseInt($('itemCant').value)||1;
+  const precio = parseFloat($('itemPrecio').value)||0;
+  if(!desc){ alert('Escribe una descripción'); return; }
+  if(cant<1 || precio<0){ alert('Cantidad y precio deben ser válidos'); return; }
+  items.push({desc,cant,precio,subtotal:cant*precio});
+  $('itemDesc').value=''; $('itemCant').value=1; $('itemPrecio').value='';
+  if(!$('facturaNumero').value) $('facturaNumero').value = genFacturaNum();
+  renderItems();
+});
+
+function showPreview(){
+  if(items.length===0){ alert('Añade al menos un ítem'); return; }
+  const html = buildInvoice();
+  $('invoiceDoc').innerHTML = html;
+  // scroll suave
+  $('invoiceDoc').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function doPrint(){
+  if(items.length===0){ alert('Añade al menos un ítem'); return; }
+  const html = buildInvoice();
+  $('invoiceDoc').innerHTML = html;
+  // Pequeño delay para que renderice
+  setTimeout(()=>window.print(), 100);
+}
+
+$('btnPreview').addEventListener('click',showPreview);
+$('btnPrint').addEventListener('click',doPrint);
+$('btnPrint2').addEventListener('click',doPrint);
+
+// Historial simple (localStorage)
+function saveToHistory(){
+  if(items.length===0) return;
+  const record = {
+    numero: $('facturaNumero').value,
+    fecha: $('facturaFecha').value,
+    biz: $('bizNombre').value,
+    cli: $('cliNombre').value,
+    total: items.reduce((s,it)=>s+it.subtotal,0)*1.10,
+    items: [...items],
+    ts: Date.now()
+  };
+  history.unshift(record);
+  if(history.length>50) history.pop();
+  localStorage.setItem('verificuba_facturas',JSON.stringify(history));
+}
+
+// Hook print
+const originalPrint = window.print;
+window.print = function(){
+  saveToHistory();
+  originalPrint.call(window);
+};
+
+// Init
+renderItems();
+console.log('✅ Generador de Facturas listo');
+</script>
+</body>
+</html>
