@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora ONAT — VerifiCuba</title>
+<meta name="description" content="Calcula cuánto debes pagar a la ONAT: Ventas 10%, Territorial, Seguridad Social y Declaración Jurada. Herramienta gratuita para TCP y MIPYME en Cuba.">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/dm-sans@latest/700.css">
+<style>
+:root{
+  --bg:#0a0f1e; --ink:#eef2ff; --muted:#94a3b8; --muted2:#64748b;
+  --green:#22c55e; --emerald:#34d399; --teal:#2dd4bf; --cyan:#22d3ee;
+  --amber:#fbbf24; --red:#f87171;
+  --glass:rgba(255,255,255,.04); --glass2:rgba(255,255,255,.06); --line:rgba(255,255,255,.09);
+  --r-lg:28px; --r-md:18px; --r-sm:12px;
+  --fd:'DM Sans',sans-serif; --fb:'Inter',system-ui,sans-serif;
+  --eo:cubic-bezier(.22,1,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+.container{width:min(1100px,92%);margin:0 auto}
+/* fondo continuo */
+.canvas{position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(900px 500px at 85% -5%,rgba(45,212,191,.10),transparent 60%),
+  radial-gradient(800px 520px at -10% 30%,rgba(34,197,94,.08),transparent 60%),
+  radial-gradient(700px 500px at 70% 70%,rgba(34,211,238,.05),transparent 60%),
+  var(--bg)}
+.canvas::after{content:'';position:absolute;inset:0;background-image:
+  linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 20%,transparent 80%)}
+/* header */
+header{position:sticky;top:0;z-index:50;background:rgba(10,15,30,.75);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);padding:14px 0}
+.nav{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-weight:700;font-size:1.15rem}
+.brand img{width:32px;height:32px;border-radius:9px;background:#f8fafc;padding:3px}
+.back{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:6px;transition:.25s}
+.back:hover{color:var(--emerald)}
+/* hero */
+.hero{padding:64px 0 28px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--emerald);background:rgba(34,197,94,.08);border:1px solid rgba(52,211,153,.3);padding:8px 16px;border-radius:999px;margin-bottom:22px}
+h1{font-family:var(--fd);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:700;letter-spacing:-.02em;line-height:1.12;margin-bottom:16px}
+h1 .grad{background:linear-gradient(92deg,var(--emerald),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--muted);max-width:620px;margin:0 auto;font-size:1.02rem}
+/* disclaimer */
+.disc{max-width:760px;margin:26px auto 0;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.3);border-radius:var(--r-md);padding:14px 20px;font-size:.85rem;color:#fde68a;display:flex;gap:12px;align-items:flex-start}
+.disc svg{flex:none;margin-top:2px}
+/* calculator */
+.calc{display:grid;grid-template-columns:1fr 1.15fr;gap:26px;margin:44px 0 30px;align-items:start}
+.panel{background:linear-gradient(165deg,var(--glass2),var(--glass));border:1px solid var(--line);border-radius:var(--r-lg);backdrop-filter:blur(16px);padding:32px}
+.panel h3{font-family:var(--fd);font-size:1.1rem;font-weight:700;margin-bottom:22px;display:flex;align-items:center;gap:9px}
+.field{margin-bottom:20px}
+.field label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.field label .hint{font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted2)}
+.field input,.field select{width:100%;background:rgba(10,15,30,.5);border:1px solid var(--line);border-radius:var(--r-sm);padding:13px 15px;color:var(--ink);font-size:.95rem;font-family:var(--fb);outline:none;transition:.25s}
+.field input:focus,.field select:focus{border-color:var(--emerald);box-shadow:0 0 0 4px rgba(52,211,153,.12)}
+.field select option{background:#0d1426}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{background:rgba(10,15,30,.5);border:1px solid var(--line);border-radius:var(--r-sm);padding:11px;color:var(--muted);font-size:.85rem;font-weight:600;cursor:pointer;transition:.25s;font-family:var(--fb)}
+.seg button.on{background:rgba(34,197,94,.14);border-color:var(--emerald);color:var(--emerald)}
+/* results */
+.results{display:flex;flex-direction:column;gap:18px}
+.rcard{background:linear-gradient(165deg,var(--glass2),var(--glass));border:1px solid var(--line);border-radius:var(--r-lg);backdrop-filter:blur(16px);padding:26px 28px}
+.rcard h4{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.line{display:flex;justify-content:space-between;align-items:center;padding:9px 0;font-size:.92rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.line:last-of-type{border-bottom:none}
+.line .lbl{color:var(--muted);display:flex;align-items:center;gap:9px}
+.line .lbl .pct{font-size:.7rem;color:var(--muted2);background:rgba(255,255,255,.06);padding:2px 7px;border-radius:999px}
+.line .val{font-weight:600;font-variant-numeric:tabular-nums}
+.total{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:16px;border-top:2px solid rgba(52,211,153,.35)}
+.total .lbl{font-weight:700;font-size:1rem}
+.total .val{font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--emerald);font-variant-numeric:tabular-nums}
+.note{font-size:.78rem;color:var(--muted2);margin-top:12px;line-height:1.5}
+.alert{border-radius:var(--r-md);padding:13px 16px;font-size:.84rem;display:flex;gap:10px;align-items:flex-start;margin-top:14px}
+.alert.good{background:rgba(34,197,94,.09);border:1px solid rgba(52,211,153,.3);color:#a7f3d0}
+.alert.info{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.25);color:#a5f3fc}
+.alert.warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);color:#fde68a}
+.chip-dates{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:rgba(10,15,30,.5);border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-size:.82rem;color:var(--muted)}
+.chip b{color:var(--ink)}
+.chip .dot{width:7px;height:7px;border-radius:50%}
+.dj-save{color:var(--amber)}
+/* cta */
+.cta{margin:20px 0 60px;background:linear-gradient(135deg,rgba(34,197,94,.16),rgba(45,212,191,.10));border:1px solid rgba(52,211,153,.3);border-radius:var(--r-lg);padding:34px;text-align:center}
+.cta h3{font-family:var(--fd);font-size:1.3rem;font-weight:700;margin-bottom:8px}
+.cta p{color:var(--muted);font-size:.92rem;margin-bottom:20px}
+.btn-cta{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(135deg,var(--green),var(--teal));color:#04150b;font-weight:800;font-size:.9rem;padding:15px 30px;border-radius:999px;transition:.3s var(--eo);box-shadow:0 8px 30px rgba(34,197,94,.35)}
+.btn-cta:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(34,197,94,.5)}
+footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--muted2);font-size:.78rem}
+footer a{color:var(--muted)}footer a:hover{color:var(--emerald)}
+@media(max-width:860px){.calc{grid-template-columns:1fr}.panel{padding:26px}}
+</style>
+</head>
+<body>
+<div class="canvas"></div>
+
+<header><div class="container nav">
+  <a class="brand" href="/"><img src="logo.png" alt="VerifiCuba">VerifiCuba</a>
+  <a class="back" href="/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Volver al inicio</a>
+</div></header>
+
+<section class="hero container">
+  <span class="eyebrow">🧮 Herramienta gratuita</span>
+  <h1>Calculadora <span class="grad">ONAT</span></h1>
+  <p class="hero-sub">Ingresa tus ventas mensuales y te decimos exactamente qué debes pagar: Ventas, Territorial, Seguridad Social y tu Declaración Jurada anual. Sin sorpresas, sin multas.</p>
+  <div class="disc">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    <span><b>Cálculo orientativo.</b> Las tasas se basan en la Ley 113 y el Decreto 160, pero pueden variar. Verifica siempre con un contador o la ONAT antes de pagar. VerifiCuba no está afiliada a la ONAT.</span>
+  </div>
+</section>
+
+<section class="container">
+  <div class="calc">
+    <!-- INPUTS -->
+    <div class="panel">
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg>Tus datos</h3>
+
+      <div class="field">
+        <label>Ventas mensuales (CUP)</label>
+        <input type="number" id="ventas" min="0" step="100" placeholder="Ej: 150000" inputmode="numeric">
+      </div>
+
+      <div class="field">
+        <label>Gastos mensuales (CUP) <span class="hint">— opcional</span></label>
+        <input type="number" id="gastos" min="0" step="100" placeholder="Si lo dejas vacío, usamos un margen estimado" inputmode="numeric">
+      </div>
+
+      <div class="field">
+        <label>Tipo de actor</label>
+        <div class="seg" id="tipo">
+          <button type="button" data-v="TCP" class="on">TCP</button>
+          <button type="button" data-v="MIPYME">MIPYME</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Impuesto Territorial</label>
+        <div class="seg" id="actividad">
+          <button type="button" data-v="general" class="on">General (5%)</button>
+          <button type="button" data-v="priorizada">Priorizada (1%)</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Mes actual</label>
+        <select id="mes"></select>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results">
+      <div class="rcard">
+        <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Lo que pagas cada mes</h4>
+        <div class="line"><span class="lbl">Impuesto sobre las Ventas <span class="pct" id="pVentas"></span></span><span class="val" id="rVentas">—</span></div>
+        <div class="line"><span class="lbl">Impuesto Territorial <span class="pct" id="pTerr"></span></span><span class="val" id="rTerr">—</span></div>
+        <div class="line"><span class="lbl">Seguridad Social <span class="pct" id="pSS"></span></span><span class="val" id="rSS">—</span></div>
+        <div class="total"><span class="lbl">Total mensual</span><span class="val" id="rTotalMes">—</span></div>
+        <div class="note" id="notaMIPYME" style="display:none">Las MIPYME pagan la Seguridad Social vía esquema empleador (14%) + trabajador (5%) sobre la nómina, no sobre ventas. Esta estimación aplica al régimen TCP.</div>
+      </div>
+
+      <div class="rcard">
+        <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Fechas de pago</h4>
+        <div class="chip-dates">
+          <span class="chip"><span class="dot" style="background:#34d399"></span><b>Día 15</b>&nbsp;Ventas + Territorial</span>
+          <span class="chip"><span class="dot" style="background:#22d3ee"></span><b>Día 30</b>&nbsp;Seguridad Social</span>
+        </div>
+        <div class="alert info" id="alertaMes"></div>
+      </div>
+
+      <div class="rcard">
+        <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>Declaración Jurada (anual)</h4>
+        <div class="line"><span class="lbl">Utilidad neta estimada (año)</span><span class="val" id="rUtilidad">—</span></div>
+        <div class="line"><span class="lbl">DJ a pagar <span class="pct">progresiva 15–50%</span></span><span class="val" id="rDJ">—</span></div>
+        <div class="line"><span class="lbl">Con descuento 5% (antes 28 feb) <span class="pct dj-save">-5%</span></span><span class="val dj-save" id="rDJDesc">—</span></div>
+        <div class="alert good" id="alertaDesc"></div>
+      </div>
+
+      <div class="rcard">
+        <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 4 4 5-6"/></svg>Estimado anual total</h4>
+        <div class="total" style="border:none;margin:0;padding:0"><span class="lbl">Impuestos del año</span><span class="val" id="rTotalAnual">—</span></div>
+        <div class="note">Suma de las obligaciones mensuales × 12 + la Declaración Jurada anual.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h3>¿Cansado de hacer estas cuentas a mano?</h3>
+    <p>Registra tu negocio en VerifiCuba y recibe alertas automáticas por WhatsApp los días 15 y 30, con tu cálculo listo.</p>
+    <a class="btn-cta" href="/#registro">📝 Registrar mi negocio gratis</a>
+  </div>
+</section>
+
+<footer><div class="container">
+  Calculadora ONAT · <a href="/">VerifiCuba</a> · Hecho en 🇨🇺 para la nueva economía cubana.<br>
+  Herramienta orientativa — no constituye asesoría fiscal oficial.
+</div></footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   CONFIG — TASAS EDITABLES  ⚠️ VALIDAR con ONAT/contador
+   Fuentes de referencia: Ley 113, Decreto 160, Res. 165/2024
+   ════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  ventas:        { tasa: 0.10 },                       // 10% sobre ingresos brutos
+  territorial:   { general: 0.05, priorizada: 0.01 },  // 5% general / 1% priorizadas
+  seguridadSocial:{ tcp: 0.17 },                       // 17% TCP (AP+enfermedad+maternidad)
+  margenEstimado:0.40,                                 // utilidad si no se indican gastos (40%)
+  dj: {
+    tramos: [                                          // progresiva sobre utilidad neta anual
+      { hasta: 50000,    tasa: 0.15 },
+      { hasta: 200000,   tasa: 0.20 },
+      { hasta: 500000,   tasa: 0.30 },
+      { hasta: 1000000,  tasa: 0.40 },
+      { hasta: Infinity, tasa: 0.50 },
+    ],
+    descuento: 0.05,          // 5% si presenta y paga antes del 28 feb
+    limiteDescuento: { mes: 2, dia: 28 },
+  },
+};
+
+const $ = id => document.getElementById(id);
+const fmtCUP = n => new Intl.NumberFormat('es-CU',{maximumFractionDigits:0}).format(Math.round(n)) + ' CUP';
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+let estado = { tipo:'TCP', actividad:'general' };
+
+/* select de mes (auto = mes actual) */
+const selMes = $('mes');
+MESES.forEach((m,i)=>{ const o=document.createElement('option'); o.value=i+1; o.textContent=m; selMes.appendChild(o); });
+selMes.value = new Date().getMonth()+1;
+
+/* segmented buttons */
+function bindSeg(id, key){
+  $(id).querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      $(id).querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on'); estado[key]=b.dataset.v; calcular();
+    });
+  });
+}
+bindSeg('tipo','tipo'); bindSeg('actividad','actividad');
+
+/* DJ progresiva por tramos */
+function calcularDJ(utilidadAnual){
+  let imp=0, lim=0;
+  for(const t of CONFIG.dj.tramos){
+    if(utilidadAnual<=lim) break;
+    imp += (Math.min(utilidadAnual,t.hasta)-lim)*t.tasa;
+    lim = t.hasta;
+  }
+  return imp;
+}
+
+function calcular(){
+  const ventas = parseFloat($('ventas').value)||0;
+  const gastosRaw = $('gastos').value.trim();
+  const gastos = gastosRaw==='' ? ventas*(1-CONFIG.margenEstimado) : (parseFloat(gastosRaw)||0);
+  const mes = parseInt(selMes.value);
+
+  // mensual
+  const impVentas = ventas*CONFIG.ventas.tasa;
+  const tasaTerr  = estado.actividad==='priorizada' ? CONFIG.territorial.priorizada : CONFIG.territorial.general;
+  const impTerr   = ventas*tasaTerr;
+  const esTCP     = estado.tipo==='TCP';
+  const impSS     = esTCP ? ventas*CONFIG.seguridadSocial.tcp : 0;
+  const totalMes  = impVentas+impTerr+impSS;
+
+  // utilidad / DJ
+  const utilidadMes   = Math.max(0, ventas-gastos);
+  const utilidadAnual = utilidadMes*12;
+  const djBruta   = calcularDJ(utilidadAnual);
+  const djConDesc = djBruta*(1-CONFIG.dj.descuento);
+  const ahorro    = djBruta-djConDesc;
+
+  // render mensual
+  $('pVentas').textContent = Math.round(CONFIG.ventas.tasa*100)+'%';
+  $('pTerr').textContent   = Math.round(tasaTerr*100)+'%';
+  $('pSS').textContent     = esTCP ? Math.round(CONFIG.seguridadSocial.tcp*100)+'%' : '—';
+  $('rVentas').textContent = ventas? fmtCUP(impVentas):'—';
+  $('rTerr').textContent   = ventas? fmtCUP(impTerr):'—';
+  $('rSS').textContent     = ventas&&esTCP? fmtCUP(impSS):'—';
+  $('rTotalMes').textContent = ventas? fmtCUP(totalMes):'—';
+  $('notaMIPYME').style.display = esTCP? 'none':'block';
+
+  // alerta mes / fechas
+  const falta15 = mes? 'Este mes paga Ventas + Territorial antes del día 15, y Seguridad Social antes del día 30.':'';
+  $('alertaMes').innerHTML = ventas
+    ? '⏰ '+(esTCP? falta15 : 'Este mes paga Ventas + Territorial antes del día 15.')
+    : '👉 Ingresa tus ventas mensuales para ver tu calendario de pagos.';
+
+  // DJ
+  $('rUtilidad').textContent = ventas? fmtCUP(utilidadAnual):'—';
+  $('rDJ').textContent       = ventas? fmtCUP(djBruta):'—';
+  $('rDJDesc').textContent   = ventas? fmtCUP(djConDesc):'—';
+
+  // alerta descuento
+  const hoy = new Date();
+  const limite = new Date(hoy.getFullYear(), CONFIG.dj.limiteDescuento.mes-1, CONFIG.dj.limiteDescuento.dia);
+  if(!ventas){
+    $('alertaDesc').innerHTML='📅 Presenta tu DJ entre enero y marzo. Si pagas antes del 28 de febrero, obtienes un 5% de descuento.';
+  } else if(hoy<=limite){
+    $('alertaDesc').innerHTML=`🎉 ¡Estás a tiempo! Paga tu DJ antes del 28 de febrero y ahorra <b>${fmtCUP(ahorro)}</b>.`;
+  } else {
+    $('alertaDesc').innerHTML=`ℹ️ El descuento del 5% aplica hasta el 28 de febrero. Guarda este cálculo para la próxima DJ.`;
+  }
+
+  // total anual
+  const totalAnual = totalMes*12 + djBruta;
+  $('rTotalAnual').textContent = ventas? fmtCUP(totalAnual):'—';
+}
+
+['ventas','gastos','mes'].forEach(id=>$(id).addEventListener('input',calcular));
+calcular();
+</script>
+</body>
+</html>
