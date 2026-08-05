@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil — VerifiCuba Panel</title>
+  <link rel="stylesheet" href="/panel/css/panel.css">
+  <style>
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 900px) { .profile-grid { grid-template-columns: 1fr; } }
+    .avatar-preview { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-strong)); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; color: #0b0d10; margin: 0 auto 16px; }
+    .plan-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+    .plan-basico { background: rgba(139, 147, 163, 0.15); color: var(--fg-muted); }
+    .plan-verificado { background: rgba(34, 197, 94, 0.15); color: var(--ok); }
+    .plan-destacado { background: linear-gradient(135deg, var(--accent), var(--accent-strong)); color: #0b0d10; }
+    .plan-b2b { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+  </style>
+</head>
+<body>
+  <div id="nav-mount" data-nav="perfil"></div>
+
+  <div class="panel-layout">
+    <header class="panel-header" role="banner">
+      <div class="header-left">
+        <button id="nav-toggle" class="nav-toggle" aria-label="Menú" aria-expanded="false" aria-controls="panel-nav">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <h1 class="header-title">Mi Perfil</h1>
+      </div>
+      <div class="header-right">
+        <div id="userAvatar" class="user-avatar" aria-label="Usuario"></div>
+      </div>
+    </header>
+
+    <main class="panel-main" role="main">
+      <!-- Business Info Card -->
+      <section class="card" aria-labelledby="infoTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="infoTitle">Datos del Negocio</h2>
+        </div>
+        <form id="profileForm" novalidate>
+          <div class="profile-grid">
+            <div>
+              <div class="avatar-preview" id="avatarPreview" aria-hidden="true">?</div>
+              <div class="form-group">
+                <label class="form-label" for="nombre">Nombre del Negocio *</label>
+                <input type="text" id="nombre" name="nombre" class="form-input" required maxlength="100">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="tipoActor">Tipo de Actor *</label>
+                <select id="tipoActor" name="tipo_actor" class="form-select" required>
+                  <option value="TCP">Trabajador por Cuenta Propia (TCP)</option>
+                  <option value="MIPYME">MIPYME</option>
+                  <option value="CNA">Cooperativa No Agropecuaria (CNA)</option>
+                  <option value="Estatal">Empresa Estatal</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="provincia">Provincia *</label>
+                  <select id="provincia" name="provincia" class="form-select" required>
+                    <option value="">Selecciona...</option>
+                    <option value="Pinar del Río">Pinar del Río</option>
+                    <option value="Artemisa">Artemisa</option>
+                    <option value="La Habana">La Habana</option>
+                    <option value="Mayabeque">Mayabeque</option>
+                    <option value="Matanzas">Matanzas</option>
+                    <option value="Cienfuegos">Cienfuegos</option>
+                    <option value="Villa Clara">Villa Clara</option>
+                    <option value="Sancti Spíritus">Sancti Spíritus</option>
+                    <option value="Ciego de Ávila">Ciego de Ávila</option>
+                    <option value="Camagüey">Camagüey</option>
+                    <option value="Las Tunas">Las Tunas</option>
+                    <option value="Holguín">Holguín</option>
+                    <option value="Granma">Granma</option>
+                    <option value="Santiago de Cuba">Santiago de Cuba</option>
+                    <option value="Guantánamo">Guantánamo</option>
+                    <option value="Isla de la Juventud">Isla de la Juventud</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="municipio">Municipio *</label>
+                  <input type="text" id="municipio" name="municipio" class="form-input" required placeholder="Ej: Plaza de la Revolución">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="whatsapp">WhatsApp *</label>
+                <input type="tel" id="whatsapp" name="whatsapp" class="form-input" placeholder="+53 5 XXXXXXX" required pattern="^\+53[0-9]{8}$" aria-describedby="whatsappHelp">
+                <div id="whatsappHelp" class="form-help">Formato: +53 5 XXXXXXX. Usado para contacto público y verificación.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="categoria">Categoría *</label>
+                <select id="categoria" name="categoria" class="form-select" required>
+                  <option value="">Cargando categorías...</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div class="form-group">
+                <label class="form-label" for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="descripcion" class="form-textarea" rows="5" placeholder="Describe tu negocio, servicios, especialidades... (máx. 2000 caracteres)" maxlength="2000"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Estado Actual</label>
+                <div id="estadoDisplay" style="padding: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm);">
+                  <span class="badge" id="estadoBadge">Cargando...</span>
+                  <span id="planBadge" class="plan-badge" style="margin-left: 12px;"></span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Fecha de Verificación</label>
+                <div id="verificacionDisplay" style="padding: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); color: var(--fg-muted);">
+                  —
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Slug (URL pública)</label>
+                <div style="display: flex; align-items: center; gap: 8px; padding: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm);">
+                  <span style="color: var(--fg-muted);">verificuba.netlify.app/negocio/</span>
+                  <strong id="slugDisplay">—</strong>
+                </div>
+                <div class="form-help">Tu enlace público. Solo visible si estado = Verificado o Activo.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Índice de Confianza</label>
+                <div id="confianzaDisplay" style="padding: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: 1.25rem; font-weight: 700; color: var(--accent);">
+                  —
+                </div>
+                <div class="form-help">Puntuación interna (0-100). Afecta ranking en búsquedas.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px;">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios</button>
+            <button type="button" id="changePasswordBtn" class="btn btn-secondary btn-lg">Cambiar Contraseña</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Change Password Modal -->
+      <div id="passwordModal" class="modal" hidden role="dialog" aria-labelledby="pwdModalTitle" aria-modal="true">
+        <div class="modal-overlay" tabindex="-1"></div>
+        <div class="modal-content card" style="max-width: 480px; margin: auto;">
+          <div class="card-header">
+            <h2 class="card-title" id="pwdModalTitle">Cambiar Contraseña</h2>
+            <button class="btn btn-ghost" id="closePwdModal" aria-label="Cerrar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form id="passwordForm" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="currentPassword">Contraseña Actual</label>
+              <input type="password" id="currentPassword" name="currentPassword" class="form-input" required autocomplete="current-password">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newPassword">Nueva Contraseña</label>
+              <input type="password" id="newPassword" name="newPassword" class="form-input" required autocomplete="new-password" minlength="8">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="confirmPassword">Confirmar Nueva Contraseña</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required autocomplete="new-password" minlength="8">
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
+              <button type="button" id="cancelPwd" class="btn btn-secondary">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Actualizar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <section class="card" style="border-color: rgba(239, 68, 68, 0.3);" aria-labelledby="dangerTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="dangerTitle" style="color: var(--err);">Zona de Peligro</h2>
+        </div>
+        <p style="color: var(--fg-muted); margin: 0 0 16px;">Estas acciones son irreversibles.</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button type="button" id="deleteAccountBtn" class="btn btn-danger">Eliminar Mi Cuenta y Negocio</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+  <style>
+    .modal { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); animation: fadeIn 0.2s ease; }
+    .modal-content { position: relative; animation: slideUp 0.3s ease; width: 100%; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  </style>
+
+  <script type="module">
+    import { pb } from '/panel/js/pb.js';
+    import { initSync } from '/panel/js/sync-queue.js';
+    import { injectNav } from '/panel/js/nav.js';
+    import { getCurrentBusiness, getOwnerId } from '/panel/js/auth.js';
+
+    injectNav('perfil');
+    initSync(pb);
+
+    const userAvatar = document.getElementById('userAvatar');
+    const profileForm = document.getElementById('profileForm');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const categoriaSelect = document.getElementById('categoria');
+    const estadoBadge = document.getElementById('estadoBadge');
+    const planBadge = document.getElementById('planBadge');
+    const verificacionDisplay = document.getElementById('verificacionDisplay');
+    const slugDisplay = document.getElementById('slugDisplay');
+    const confianzaDisplay = document.getElementById('confianzaDisplay');
+    const toast = document.getElementById('toast');
+
+    // Modal elements
+    const passwordModal = document.getElementById('passwordModal');
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+    const closePwdModal = document.getElementById('closePwdModal');
+    const cancelPwd = document.getElementById('cancelPwd');
+    const passwordForm = document.getElementById('passwordForm');
+    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+
+    let currentBusiness = null;
+
+    function showToast(msg, type = 'ok') {
+      toast.textContent = msg;
+      toast.className = `toast ${type}`;
+      toast.hidden = false;
+      setTimeout(() => { toast.hidden = true; }, 4000);
+    }
+
+    function badgeClass(estado) {
+      const map = {
+        'Pendiente': 'badge-pending',
+        'Verificado': 'badge-verified',
+        'Activo': 'badge-activo',
+        'Suspendido': 'badge-suspendido'
+      };
+      return map[estado] || 'badge-pending';
+    }
+
+    function planBadgeClass(plan) {
+      const map = {
+        'Básico': 'plan-basico',
+        'Verificado': 'plan-verificado',
+        'Destacado': 'plan-destacado',
+        'Proveedor B2B': 'plan-b2b'
+      };
+      return map[plan] || 'plan-basico';
+    }
+
+    async function loadCategories() {
+      try {
+        const result = await pb.collection('categorias').getList(1, 50, { sort: 'nombre' });
+        categoriaSelect.innerHTML = '<option value="">Selecciona una categoría</option>' +
+          result.items.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+      } catch (err) {
+        console.error('Categories load error:', err);
+        categoriaSelect.innerHTML = '<option value="">Error cargando categorías</option>';
+      }
+    }
+
+    async function loadProfile() {
+      try {
+        currentBusiness = await getCurrentBusiness();
+        if (!currentBusiness) {
+          showToast('❌ No se encontró tu negocio', 'err');
+          return;
+        }
+
+        // Avatar
+        userAvatar.textContent = currentBusiness.nombre?.charAt(0).toUpperCase() || '?';
+        avatarPreview.textContent = currentBusiness.nombre?.charAt(0).toUpperCase() || '?';
+
+        // Form fields
+        profileForm.nombre.value = currentBusiness.nombre || '';
+        profileForm.tipo_actor.value = currentBusiness.tipo_actor || 'TCP';
+        profileForm.provincia.value = currentBusiness.provincia || '';
+        profileForm.municipio.value = currentBusiness.municipio || '';
+        profileForm.whatsapp.value = currentBusiness.whatsapp || '';
+        profileForm.descripcion.value = currentBusiness.descripcion || '';
+
+        // Wait for categories to load, then set value
+        await loadCategories();
+        if (currentBusiness.categoria) {
+          categoriaSelect.value = currentBusiness.categoria;
+        }
+
+        // Display fields
+        estadoBadge.textContent = currentBusiness.estado || 'Pendiente';
+        estadoBadge.className = `badge ${badgeClass(currentBusiness.estado)}`;
+
+        planBadge.textContent = currentBusiness.plan || 'Básico';
+        planBadge.className = `plan-badge ${planBadgeClass(currentBusiness.plan)}`;
+
+        verificacionDisplay.textContent = currentBusiness.fecha_verificacion 
+          ? new Date(currentBusiness.fecha_verificacion).toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })
+          : 'No verificado aún';
+
+        slugDisplay.textContent = currentBusiness.slug || '—';
+        confianzaDisplay.textContent = currentBusiness.indice_confianza !== undefined 
+          ? `${currentBusiness.indice_confianza}/100` : '—';
+
+      } catch (err) {
+        console.error('Profile load error:', err);
+        showToast('❌ Error cargando perfil', 'err');
+      }
+    }
+
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(profileForm);
+      const data = {
+        nombre: formData.get('nombre').trim(),
+        tipo_actor: formData.get('tipo_actor'),
+        provincia: formData.get('provincia'),
+        municipio: formData.get('municipio').trim(),
+        whatsapp: formData.get('whatsapp').trim(),
+        categoria: formData.get('categoria'),
+        descripcion: formData.get('descripcion')?.trim() || ''
+      };
+
+      if (!data.nombre || !data.tipo_actor || !data.provincia || !data.municipio || !data.whatsapp || !data.categoria) {
+        showToast('❌ Completa todos los campos requeridos', 'err');
+        return;
+      }
+
+      try {
+        await pb.collection('negocios').update(currentBusiness.id, data);
+        showToast('✅ Perfil actualizado', 'ok');
+        loadProfile(); // Refresh display fields
+      } catch (err) {
+        console.error('Profile update error:', err);
+        showToast(`❌ ${err.response?.data?.message || 'Error al guardar'}`, 'err');
+      }
+    });
+
+    // Password Modal
+    function openPwdModal() { passwordModal.hidden = false; passwordForm.reset(); }
+    function closePwdModalFn() { passwordModal.hidden = true; }
+
+    changePasswordBtn.onclick = openPwdModal;
+    closePwdModal.onclick = closePwdModalFn;
+    cancelPwd.onclick = closePwdModalFn;
+    passwordModal.querySelector('.modal-overlay').onclick = closePwdModalFn;
+
+    passwordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(passwordForm);
+      const currentPassword = formData.get('currentPassword');
+      const newPassword = formData.get('newPassword');
+      const confirmPassword = formData.get('confirmPassword');
+
+      if (newPassword !== confirmPassword) {
+        showToast('❌ Las contraseñas no coinciden', 'err');
+        return;
+      }
+      if (newPassword.length < 8) {
+        showToast('❌ Mínimo 8 caracteres', 'err');
+        return;
+      }
+
+      try {
+        // Re-authenticate with current password
+        await pb.collection('users').authWithPassword(pb.authStore.record.whatsapp, currentPassword);
+        // Update password
+        await pb.collection('users').update(pb.authStore.record.id, {
+          password: newPassword,
+          passwordConfirm: newPassword
+        });
+        showToast('✅ Contraseña actualizada', 'ok');
+        closePwdModalFn();
+      } catch (err) {
+        console.error('Password change error:', err);
+        showToast(`❌ ${err.response?.data?.message || 'Contraseña actual incorrecta'}`, 'err');
+      }
+    });
+
+    // Delete Account
+    deleteAccountBtn.onclick = async () => {
+      const confirm1 = confirm('⚠️ ADVERTENCIA: Esto eliminará TU CUENTA y TU NEGOCIO permanentemente. Todos tus cálculos, facturas y transacciones se borrarán. ¿Estás ABSOLUTAMENTE SEGURO?');
+      if (!confirm1) return;
+
+      const confirm2 = prompt('Escribe "ELIMINAR" en mayúsculas para confirmar:');
+      if (confirm2 !== 'ELIMINAR') {
+        showToast('❌ Confirmación incorrecta', 'err');
+        return;
+      }
+
+      try {
+        const ownerId = getOwnerId();
+        const business = await pb.collection('negocios').getFirstListItem(`owner="${ownerId}"`);
+        
+        // Delete business first (cascades to related collections via rules)
+        await pb.collection('negocios').delete(business.id);
+        // Delete user account
+        await pb.collection('users').delete(ownerId);
+        
+        pb.authStore.clear();
+        showToast('✅ Cuenta eliminada', 'ok');
+        setTimeout(() => window.location.href = '/panel/login.html', 1500);
+      } catch (err) {
+        console.error('Delete account error:', err);
+        showToast(`❌ ${err.response?.data?.message || 'Error al eliminar'}`, 'err');
+      }
+    };
+
+    // Init
+    loadProfile();
+  </script>
+</body>
+</html>
