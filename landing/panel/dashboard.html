@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — VerifiCuba Panel</title>
+  <link rel="stylesheet" href="/panel/css/panel.css">
+</head>
+<body>
+  <div id="nav-mount" data-nav="dashboard"></div>
+
+  <div class="panel-layout">
+    <header class="panel-header" role="banner">
+      <div class="header-left">
+        <button id="nav-toggle" class="nav-toggle" aria-label="Menú" aria-expanded="false" aria-controls="panel-nav">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <h1 class="header-title">Dashboard</h1>
+      </div>
+      <div class="header-right">
+        <div id="userAvatar" class="user-avatar" aria-label="Usuario"></div>
+      </div>
+    </header>
+
+    <main class="panel-main" role="main">
+      <!-- Verification Status Banner -->
+      <section id="statusBanner" class="card" style="margin-bottom: 24px; display: none;">
+        <div class="card-header">
+          <h2 class="card-title">Estado de Verificación</h2>
+        </div>
+        <div id="statusContent"></div>
+      </section>
+
+      <!-- Stats Grid -->
+      <section aria-label="Estadísticas rápidas">
+        <div class="stats-grid" id="statsGrid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="card" aria-labelledby="actionsTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="actionsTitle">Accesos Rápidos</h2>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+          <a href="/panel/calculadora.html" class="card" style="text-decoration: none; padding: 24px; display: flex; flex-direction: column; gap: 12px; transition: border-color var(--transition), transform var(--transition);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" aria-hidden="true">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M4 8h16"/><path d="M8 12h8"/><path d="M8 16h4"/>
+            </svg>
+            <div>
+              <h3 style="margin: 0; font-size: 1.1rem;">Calculadora ONAT</h3>
+              <p style="margin: 0; color: var(--fg-muted); font-size: 0.85rem;">Calcula y guarda tus impuestos TCP/MIPYME</p>
+            </div>
+          </a>
+          <a href="/panel/facturas.html" class="card" style="text-decoration: none; padding: 24px; display: flex; flex-direction: column; gap: 12px; transition: border-color var(--transition), transform var(--transition);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+            </svg>
+            <div>
+              <h3 style="margin: 0; font-size: 1.1rem;">Generar Facturas</h3>
+              <p style="margin: 0; color: var(--fg-muted); font-size: 0.85rem;">Crea facturas profesionales con PDF</p>
+            </div>
+          </a>
+          <a href="/panel/finanzas.html" class="card" style="text-decoration: none; padding: 24px; display: flex; flex-direction: column; gap: 12px; transition: border-color var(--transition), transform var(--transition);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" aria-hidden="true">
+              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+            </svg>
+            <div>
+              <h3 style="margin: 0; font-size: 1.1rem;">Finanzas</h3>
+              <p style="margin: 0; color: var(--fg-muted); font-size: 0.85rem;">Ingresos, gastos, balance y export</p>
+            </div>
+          </a>
+          <a href="/panel/perfil.html" class="card" style="text-decoration: none; padding: 24px; display: flex; flex-direction: column; gap: 12px; transition: border-color var(--transition), transform var(--transition);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <div>
+              <h3 style="margin: 0; font-size: 1.1rem;">Mi Perfil</h3>
+              <p style="margin: 0; color: var(--fg-muted); font-size: 0.85rem;">Edita datos de tu negocio</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Recent Activity -->
+      <section class="card" aria-labelledby="activityTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="activityTitle">Actividad Reciente</h2>
+          <a href="/panel/finanzas.html" class="btn btn-ghost btn-sm">Ver todo</a>
+        </div>
+        <div class="table-wrap">
+          <table id="activityTable">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Monto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+        <div id="emptyActivity" class="empty-state" hidden>
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <h3>Sin actividad reciente</h3>
+          <p>Empieza registrando una transacción en <a href="/panel/finanzas.html">Finanzas</a></p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+  <script type="module">
+    import { pb } from '/panel/js/pb.js';
+    import { initSync, flushQueue } from '/panel/js/sync-queue.js';
+    import { injectNav } from '/panel/js/nav.js';
+    import { getCurrentBusiness } from '/panel/js/auth.js';
+
+    // Inject nav
+    injectNav('dashboard');
+
+    // Initialize sync
+    initSync(pb);
+
+    const userAvatar = document.getElementById('userAvatar');
+    const statusBanner = document.getElementById('statusBanner');
+    const statusContent = document.getElementById('statusContent');
+    const statsGrid = document.getElementById('statsGrid');
+    const activityTable = document.getElementById('activityTable').querySelector('tbody');
+    const emptyActivity = document.getElementById('emptyActivity');
+    const toast = document.getElementById('toast');
+
+    function showToast(msg, type = 'ok') {
+      toast.textContent = msg;
+      toast.className = `toast ${type}`;
+      toast.hidden = false;
+      setTimeout(() => { toast.hidden = true; }, 4000);
+    }
+
+    function badgeClass(estado) {
+      const map = {
+        'Pendiente': 'badge-pending',
+        'Verificado': 'badge-verified',
+        'Activo': 'badge-activo',
+        'Suspendido': 'badge-suspendido'
+      };
+      return map[estado] || 'badge-pending';
+    }
+
+    function formatCurrency(n) {
+      return new Intl.NumberFormat('es-CU', { style: 'currency', currency: 'CUP', minimumFractionDigits: 0 }).format(n);
+    }
+
+    function formatDate(d) {
+      return new Date(d).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    async function loadDashboard() {
+      try {
+        const business = await getCurrentBusiness();
+        if (!business) {
+          showToast('❌ No se encontró tu negocio', 'err');
+          return;
+        }
+
+        // User avatar initial
+        userAvatar.textContent = business.nombre?.charAt(0).toUpperCase() || '?';
+
+        // Status banner
+        statusBanner.hidden = false;
+        statusContent.innerHTML = `
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px;">
+            <span class="badge ${badgeClass(business.estado)}">${business.estado}</span>
+            <span style="color: var(--fg-muted);">Plan: <strong>${business.plan || 'Básico'}</strong></span>
+            ${business.estado === 'Pendiente' ? `
+              <span style="color: var(--warn); font-size: 0.9rem;">
+                Tu negocio está pendiente de verificación. Contacta al admin por WhatsApp para activar visibilidad pública.
+              </span>
+            ` : business.estado === 'Verificado' || business.estado === 'Activo' ? `
+              <span style="color: var(--ok); font-size: 0.9rem;">
+                ✅ Visible en el directorio público. Badge de verificación activo.
+              </span>
+            ` : ''}
+          </div>
+        `;
+
+        // Stats
+        const [calculosCount, facturasCount, transaccionesCount] = await Promise.all([
+          pb.collection('calculos_onat').getList(1, 1, { filter: `negocio="${business.id}"` }).then(r => r.totalItems),
+          pb.collection('facturas').getList(1, 1, { filter: `negocio="${business.id}"` }).then(r => r.totalItems),
+          pb.collection('transacciones').getList(1, 1, { filter: `negocio="${business.id}"`, sort: '-fecha' }).then(r => r.totalItems)
+        ]);
+
+        // Get latest transaction for balance preview
+        let balance = 0;
+        try {
+          const trans = await pb.collection('transacciones').getList(1, 50, { filter: `negocio="${business.id}"` });
+          balance = trans.items.reduce((sum, t) => sum + (t.tipo === 'ingreso' ? t.monto : -t.monto), 0);
+        } catch {}
+
+        statsGrid.innerHTML = `
+          <div class="stat-card">
+            <span class="stat-label">Cálculos ONAT</span>
+            <span class="stat-value accent">${calculosCount}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Facturas Emitidas</span>
+            <span class="stat-value ok">${facturasCount}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Transacciones</span>
+            <span class="stat-value">${transaccionesCount}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Balance Actual</span>
+            <span class="stat-value ${balance >= 0 ? 'ok' : 'err'}">${formatCurrency(balance)}</span>
+          </div>
+        `;
+
+        // Recent transactions
+        try {
+          const recent = await pb.collection('transacciones').getList(1, 5, {
+            filter: `negocio="${business.id}"`,
+            sort: '-fecha'
+          });
+
+          if (recent.items.length === 0) {
+            activityTable.innerHTML = '';
+            emptyActivity.hidden = false;
+          } else {
+            emptyActivity.hidden = true;
+            activityTable.innerHTML = recent.items.map(t => `
+              <tr>
+                <td>${formatDate(t.fecha)}</td>
+                <td><span class="badge ${t.tipo === 'ingreso' ? 'badge-verified' : 'badge-warn'}">${t.tipo}</span></td>
+                <td>${t.categoria || 'Sin categoría'}</td>
+                <td style="color: ${t.tipo === 'ingreso' ? 'var(--ok)' : 'var(--err)'}; font-weight: 600;">
+                  ${t.tipo === 'ingreso' ? '+' : '-'}${formatCurrency(t.monto)}
+                </td>
+              </tr>
+            `).join('');
+          }
+        } catch (err) {
+          console.error('Recent transactions error:', err);
+          emptyActivity.hidden = false;
+        }
+
+      } catch (err) {
+        console.error('Dashboard load error:', err);
+        showToast('❌ Error cargando dashboard', 'err');
+      }
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

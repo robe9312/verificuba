@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finanzas — VerifiCuba Panel</title>
+  <link rel="stylesheet" href="/panel/css/panel.css">
+  <style>
+    .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 900px) { .finance-grid { grid-template-columns: 1fr; } }
+    .transaction-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
+    @media (max-width: 700px) { .transaction-form { grid-template-columns: 1fr; } }
+    .balance-card { background: linear-gradient(135deg, var(--bg-card), var(--bg-elev)); border: 1px solid var(--line); }
+    .balance-positive { color: var(--ok); }
+    .balance-negative { color: var(--err); }
+    .category-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; background: var(--accent-dim); color: var(--accent); }
+    .category-tag.gasto { background: rgba(239, 68, 68, 0.15); color: var(--err); }
+  </style>
+</head>
+<body>
+  <div id="nav-mount" data-nav="finanzas"></div>
+
+  <div class="panel-layout">
+    <header class="panel-header" role="banner">
+      <div class="header-left">
+        <button id="nav-toggle" class="nav-toggle" aria-label="Menú" aria-expanded="false" aria-controls="panel-nav">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <h1 class="header-title">Finanzas</h1>
+      </div>
+      <div class="header-right">
+        <div id="userAvatar" class="user-avatar" aria-label="Usuario"></div>
+      </div>
+    </header>
+
+    <main class="panel-main" role="main">
+      <!-- Balance Summary -->
+      <section aria-label="Resumen financiero">
+        <div class="stats-grid" id="balanceGrid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- New Transaction + Filters -->
+      <section class="card" aria-labelledby="transTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="transTitle">Nueva Transacción</h2>
+        </div>
+        <form id="transForm" class="transaction-form" novalidate>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="transTipo">Tipo</label>
+            <select id="transTipo" name="tipo" class="form-select" required>
+              <option value="ingreso">💰 Ingreso</option>
+              <option value="gasto">💸 Gasto</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="transMonto">Monto (CUP)</label>
+            <input type="number" id="transMonto" name="monto" class="form-input" placeholder="0.00" step="0.01" min="0.01" required>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="transCategoria">Categoría</label>
+            <input type="text" id="transCategoria" name="categoria" class="form-input" placeholder="Ej: Ventas, Alquiler, Insumos" required list="categoriasList">
+            <datalist id="categoriasList">
+              <option value="Ventas">
+              <option value="Servicios">
+              <option value="Alquiler">
+              <option value="Insumos">
+              <option value="Marketing">
+              <option value="Transporte">
+              <option value="Servicios públicos">
+              <option value="Nómina">
+              <option value="Impuestos">
+              <option value="Otros">
+            </datalist>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="transFecha">Fecha</label>
+            <input type="date" id="transFecha" name="fecha" class="form-input" required>
+          </div>
+          <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+            <label class="form-label" for="transDescripcion">Descripción (opcional)</label>
+            <input type="text" id="transDescripcion" name="descripcion" class="form-input" placeholder="Detalle adicional">
+          </div>
+          <button type="submit" class="btn btn-primary" style="grid-column: 1 / -1; justify-self: start;">Registrar</button>
+        </form>
+      </section>
+
+      <!-- Filters -->
+      <section class="card" style="margin-bottom: 16px;" aria-labelledby="filterTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="filterTitle" style="margin: 0;">Filtros</h2>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: end;">
+          <div class="form-group" style="margin: 0; min-width: 180px;">
+            <label class="form-label" for="filterTipo">Tipo</label>
+            <select id="filterTipo" class="form-select">
+              <option value="">Todos</option>
+              <option value="ingreso">Ingresos</option>
+              <option value="gasto">Gastos</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin: 0; min-width: 180px;">
+            <label class="form-label" for="filterCategoria">Categoría</label>
+            <input type="text" id="filterCategoria" class="form-input" placeholder="Filtrar por categoría" list="categoriasList">
+          </div>
+          <div class="form-group" style="margin: 0; min-width: 160px;">
+            <label class="form-label" for="filterDesde">Desde</label>
+            <input type="date" id="filterDesde" class="form-input">
+          </div>
+          <div class="form-group" style="margin: 0; min-width: 160px;">
+            <label class="form-label" for="filterHasta">Hasta</label>
+            <input type="date" id="filterHasta" class="form-input">
+          </div>
+          <button type="button" id="applyFilters" class="btn btn-secondary">Aplicar</button>
+          <button type="button" id="clearFilters" class="btn btn-ghost">Limpiar</button>
+          <button type="button" id="exportBtn" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Exportar CSV
+          </button>
+        </div>
+      </section>
+
+      <!-- Transactions Table -->
+      <section class="card" aria-labelledby="listTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="listTitle">Transacciones</h2>
+          <span id="transCount" style="color: var(--fg-muted); font-size: 0.85rem; font-weight: normal;"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th style="text-align: right;">Monto</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="transBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+        <div id="emptyTrans" class="empty-state" hidden>
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+          </svg>
+          <h3>Sin transacciones</h3>
+          <p>Registra tu primer ingreso o gasto arriba</p>
+        </div>
+        <div id="pagination" style="display: flex; justify-content: center; gap: 8px; margin-top: 16px;"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+  <script type="module">
+    import { pb } from '/panel/js/pb.js';
+    import { initSync } from '/panel/js/sync-queue.js';
+    import { injectNav } from '/panel/js/nav.js';
+    import { getCurrentBusiness, getOwnerId } from '/panel/js/auth.js';
+
+    injectNav('finanzas');
+    initSync(pb);
+
+    const userAvatar = document.getElementById('userAvatar');
+    const balanceGrid = document.getElementById('balanceGrid');
+    const transForm = document.getElementById('transForm');
+    const transBody = document.getElementById('transBody');
+    const emptyTrans = document.getElementById('emptyTrans');
+    const transCount = document.getElementById('transCount');
+    const pagination = document.getElementById('pagination');
+    const toast = document.getElementById('toast');
+    const exportBtn = document.getElementById('exportBtn');
+    const applyFilters = document.getElementById('applyFilters');
+    const clearFilters = document.getElementById('clearFilters');
+    const filterTipo = document.getElementById('filterTipo');
+    const filterCategoria = document.getElementById('filterCategoria');
+    const filterDesde = document.getElementById('filterDesde');
+    const filterHasta = document.getElementById('filterHasta');
+    const transFecha = document.getElementById('transFecha');
+
+    // Set default date to today
+    transFecha.valueAsDate = new Date();
+
+    let currentPage = 1;
+    const PER_PAGE = 20;
+    let currentFilters = {};
+    let allTransactions = [];
+
+    function showToast(msg, type = 'ok') {
+      toast.textContent = msg;
+      toast.className = `toast ${type}`;
+      toast.hidden = false;
+      setTimeout(() => { toast.hidden = true; }, 4000);
+    }
+
+    function formatCurrency(n) {
+      return new Intl.NumberFormat('es-CU', { style: 'currency', currency: 'CUP', minimumFractionDigits: 0 }).format(n);
+    }
+
+    function formatDate(d) {
+      return new Date(d).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function buildFilter() {
+      const parts = [];
+      if (currentFilters.tipo) parts.push(`tipo='${currentFilters.tipo}'`);
+      if (currentFilters.categoria) parts.push(`categoria~'${currentFilters.categoria}'`);
+      if (currentFilters.desde) parts.push(`fecha>='${currentFilters.desde}'`);
+      if (currentFilters.hasta) parts.push(`fecha<='${currentFilters.hasta}'`);
+      return parts.join(' && ');
+    }
+
+    async function loadTransactions(page = 1) {
+      try {
+        const ownerId = getOwnerId();
+        if (!ownerId) return;
+
+        const business = await pb.collection('negocios').getFirstListItem(`owner="${ownerId}"`);
+        const filter = buildFilter();
+        const fullFilter = filter ? `negocio="${business.id}" && ${filter}` : `negocio="${business.id}"`;
+
+        const result = await pb.collection('transacciones').getList(page, PER_PAGE, {
+          filter: fullFilter,
+          sort: '-fecha, -created'
+        });
+
+        allTransactions = result.items;
+        currentPage = page;
+        renderTransactions(result);
+      } catch (err) {
+        console.error('Load transactions error:', err);
+        emptyTrans.hidden = false;
+        transBody.innerHTML = '';
+        transCount.textContent = '';
+      }
+    }
+
+    function renderTransactions(result) {
+      if (result.items.length === 0) {
+        emptyTrans.hidden = false;
+        transBody.innerHTML = '';
+        transCount.textContent = `Total: ${result.totalItems}`;
+        pagination.innerHTML = '';
+        return;
+      }
+
+      emptyTrans.hidden = true;
+      transCount.textContent = `Mostrando ${result.items.length} de ${result.totalItems}`;
+
+      transBody.innerHTML = result.items.map(t => `
+        <tr>
+          <td>${formatDate(t.fecha)}</td>
+          <td><span class="badge ${t.tipo === 'ingreso' ? 'badge-verified' : 'badge-warn'}">${t.tipo}</span></td>
+          <td><span class="category-tag ${t.tipo === 'gasto' ? 'gasto' : ''}">${t.categoria}</span></td>
+          <td>${t.descripcion || '—'}</td>
+          <td style="text-align: right; font-weight: 600; color: ${t.tipo === 'ingreso' ? 'var(--ok)' : 'var(--err)'};">
+            ${t.tipo === 'ingreso' ? '+' : '-'}${formatCurrency(t.monto)}
+          </td>
+          <td>
+            <button class="btn btn-ghost btn-sm delete-trans" data-id="${t.id}" title="Eliminar" style="color: var(--err);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Bind delete buttons
+      transBody.querySelectorAll('.delete-trans').forEach(btn => {
+        btn.onclick = async () => {
+          if (!confirm('¿Eliminar esta transacción?')) return;
+          try {
+            await pb.collection('transacciones').delete(btn.dataset.id);
+            showToast('✅ Transacción eliminada', 'ok');
+            loadTransactions(currentPage);
+          } catch (err) {
+            showToast(`❌ ${err.response?.data?.message || 'Error'}`, 'err');
+          }
+        };
+      });
+
+      // Pagination
+      const totalPages = result.totalPages;
+      if (totalPages > 1) {
+        pagination.innerHTML = `
+          <button class="btn btn-sm btn-secondary" ${page === 1 ? 'disabled' : ''} data-page="${page - 1}">« Anterior</button>
+          <span style="display: flex; align-items: center; padding: 0 12px; color: var(--fg-muted);">Página ${page} de ${totalPages}</span>
+          <button class="btn btn-sm btn-secondary" ${page === totalPages ? 'disabled' : ''} data-page="${page + 1}">Siguiente »</button>
+        `;
+        pagination.querySelectorAll('[data-page]').forEach(btn => {
+          btn.onclick = () => loadTransactions(parseInt(btn.dataset.page));
+        });
+      } else {
+        pagination.innerHTML = '';
+      }
+    }
+
+    function updateBalance(transactions) {
+      const ingresos = transactions.filter(t => t.tipo === 'ingreso').reduce((sum, t) => sum + t.monto, 0);
+      const gastos = transactions.filter(t => t.tipo === 'gasto').reduce((sum, t) => sum + t.monto, 0);
+      const balance = ingresos - gastos;
+
+      balanceGrid.innerHTML = `
+        <div class="stat-card balance-card">
+          <span class="stat-label">Ingresos Totales</span>
+          <span class="stat-value ok">+${formatCurrency(ingresos)}</span>
+        </div>
+        <div class="stat-card balance-card">
+          <span class="stat-label">Gastos Totales</span>
+          <span class="stat-value err">-${formatCurrency(gastos)}</span>
+        </div>
+        <div class="stat-card balance-card">
+          <span class="stat-label">Balance Neto</span>
+          <span class="stat-value ${balance >= 0 ? 'balance-positive' : 'balance-negative'}">${balance >= 0 ? '+' : ''}${formatCurrency(balance)}</span>
+        </div>
+        <div class="stat-card balance-card">
+          <span class="stat-label">Transacciones</span>
+          <span class="stat-value accent">${transactions.length}</span>
+        </div>
+      `;
+    }
+
+    async function loadAllForBalance() {
+      try {
+        const ownerId = getOwnerId();
+        if (!ownerId) return;
+
+        const business = await pb.collection('negocios').getFirstListItem(`owner="${ownerId}"`);
+        const result = await pb.collection('transacciones').getList(1, 500, {
+          filter: `negocio="${business.id}"`,
+          sort: '-fecha'
+        });
+        updateBalance(result.items);
+      } catch (err) {
+        console.error('Balance load error:', err);
+      }
+    }
+
+    transForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(transForm);
+      const tipo = formData.get('tipo');
+      const monto = parseFloat(formData.get('monto'));
+      const categoria = formData.get('categoria').trim();
+      const fecha = formData.get('fecha');
+      const descripcion = formData.get('descripcion')?.trim() || '';
+
+      if (!tipo || !monto || !categoria || !fecha) {
+        showToast('❌ Completa todos los campos requeridos', 'err');
+        return;
+      }
+
+      try {
+        const ownerId = getOwnerId();
+        const business = await pb.collection('negocios').getFirstListItem(`owner="${ownerId}"`);
+
+        const recordData = { negocio: business.id, tipo, monto, categoria, fecha, descripcion };
+        await pb.collection('transacciones').create(recordData);
+        showToast(`✅ ${tipo === 'ingreso' ? 'Ingreso' : 'Gasto'} registrado`, 'ok');
+        transForm.reset();
+        transFecha.valueAsDate = new Date();
+        loadTransactions(currentPage);
+        loadAllForBalance();
+      } catch (err) {
+        console.error('Transaction save error:', err);
+        if (err.message?.includes('Failed to fetch') || err.message?.includes('network')) {
+          await enqueueCreate('transacciones', recordData);
+          showToast('📴 Sin conexión — guardado localmente', 'warn');
+        } else {
+          showToast(`❌ ${err.response?.data?.message || 'Error al guardar'}`, 'err');
+        }
+      }
+    });
+
+    applyFilters.onclick = () => {
+      currentFilters = {
+        tipo: filterTipo.value || null,
+        categoria: filterCategoria.value.trim() || null,
+        desde: filterDesde.value || null,
+        hasta: filterHasta.value || null
+      };
+      loadTransactions(1);
+    };
+
+    clearFilters.onclick = () => {
+      filterTipo.value = '';
+      filterCategoria.value = '';
+      filterDesde.value = '';
+      filterHasta.value = '';
+      currentFilters = {};
+      loadTransactions(1);
+    };
+
+    exportBtn.onclick = () => {
+      if (allTransactions.length === 0) {
+        showToast('❌ No hay datos para exportar', 'warn');
+        return;
+      }
+      const headers = ['Fecha', 'Tipo', 'Categoría', 'Descripción', 'Monto (CUP)'];
+      const rows = allTransactions.map(t => [
+        formatDate(t.fecha),
+        t.tipo,
+        t.categoria,
+        t.descripcion || '',
+        (t.tipo === 'ingreso' ? '+' : '-') + t.monto.toFixed(2)
+      ]);
+      const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `finanzas_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('✅ CSV descargado', 'ok');
+    };
+
+    // Init
+    async function init() {
+      try {
+        const business = await getCurrentBusiness();
+        if (business) userAvatar.textContent = business.nombre?.charAt(0).toUpperCase() || '?';
+      } catch {}
+      loadTransactions(1);
+      loadAllForBalance();
+    }
+
+    init();
+  </script>
+</body>
+</html>
