@@ -1,7 +1,6 @@
 [build]
   base = "landing"
   publish = "."
-  command = "echo 'Static site - no build needed'"
 
 [functions]
   directory = "netlify/functions"
