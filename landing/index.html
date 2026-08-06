@@ -607,13 +607,15 @@ document.getElementById('regForm').addEventListener('submit',function(e){
   // Generar password aleatoria temporal
   var tempPassword = Math.random().toString(36).slice(-8) + 'A1!';
   var slug = slugify(nombre);
+  var username = whatsapp.replace('+', ''); // username sin + para PocketBase
   
   // 1. Crear usuario en PocketBase (auth collection)
   fetch(PB_URL+'/api/collections/users/records', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
-      username: whatsapp,
+      username: username,
+      whatsapp: whatsapp,
       password: tempPassword,
       passwordConfirm: tempPassword,
       name: nombre
@@ -655,7 +657,7 @@ document.getElementById('regForm').addEventListener('submit',function(e){
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
-          identity: whatsapp,
+          identity: username,
           password: tempPassword
         })
       });
