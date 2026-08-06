@@ -3,360 +3,322 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora ONAT — VerifiCuba Panel</title>
-  <link rel="stylesheet" href="/panel/css/panel.css">
-  <style>
-    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    @media (max-width: 900px) { .calc-grid { grid-template-columns: 1fr; } }
-    .calc-input-group { display: flex; flex-direction: column; gap: 6px; }
-    .calc-result { background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
-    .calc-result-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); }
-    .calc-result-row:last-child { border-bottom: none; font-weight: 700; font-size: 1.1rem; color: var(--accent); }
-    .calc-result-label { color: var(--fg-muted); }
-    .calc-result-value { font-weight: 600; }
-    .history-table th:nth-child(4), .history-table td:nth-child(4) { text-align: right; }
-    .history-table th:nth-child(5), .history-table td:nth-child(5) { text-align: right; }
-  </style>
+  <title>Calculadora ONAT - VerifiCuba Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/panel.css">
 </head>
 <body>
-  <div id="nav-mount" data-nav="calculadora"></div>
-
   <div class="panel-layout">
-    <header class="panel-header" role="banner">
-      <div class="header-left">
-        <button id="nav-toggle" class="nav-toggle" aria-label="Menú" aria-expanded="false" aria-controls="panel-nav">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
-        </button>
-        <h1 class="header-title">Calculadora ONAT</h1>
-      </div>
-      <div class="header-right">
-        <div id="userAvatar" class="user-avatar" aria-label="Usuario"></div>
-      </div>
-    </header>
+    <nav id="panel-nav" class="panel-sidebar"></nav>
 
-    <main class="panel-main" role="main">
-      <!-- Calculator Form -->
-      <section class="card" aria-labelledby="calcTitle">
-        <div class="card-header">
-          <h2 class="card-title" id="calcTitle">Nuevo Cálculo</h2>
-        </div>
-        <div class="calc-grid">
-          <form id="calcForm" novalidate>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="tipoActor">Tipo de Actor</label>
-                <select id="tipoActor" name="tipo_actor" class="form-select" required>
-                  <option value="">Selecciona...</option>
-                  <option value="TCP">Trabajador por Cuenta Propia (TCP)</option>
-                  <option value="MIPYME">MIPYME</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="mes">Mes del Cálculo</label>
-                <input type="month" id="mes" name="mes" class="form-input" required>
-              </div>
-            </div>
+    <main class="panel-main">
+      <header class="panel-header">
+        <h1>Calculadora ONAT</h1>
+        <p class="subtitle">Calcula tus obligaciones fiscales TCP/MIPYME</p>
+      </header>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="ventas">Ventas Totales (CUP)</label>
-                <input type="number" id="ventas" name="ventas" class="form-input" placeholder="0.00" step="0.01" min="0" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="gastos">Gastos Deducibles (CUP)</label>
-                <input type="number" id="gastos" name="gastos" class="form-input" placeholder="0.00" step="0.01" min="0" required>
-              </div>
-            </div>
+      <div id="alert-container"></div>
 
+      <!-- Calculator form -->
+      <div class="panel-card">
+        <form id="calc-form" novalidate>
+          <div class="grid grid-2" style="gap: 1rem;">
             <div class="form-group">
-              <label class="form-label" for="gastosDetalle">Detalle de Gastos (opcional, JSON)</label>
-              <textarea id="gastosDetalle" name="gastos_detalle" class="form-textarea" placeholder='[{"concepto": "Alquiler", "monto": 5000}, {"concepto": "Insumos", "monto": 3000}]' aria-describedby="gastosDetalleHelp"></textarea>
-              <div id="gastosDetalleHelp" class="form-help">Array JSON opcional para desglose. Si vacío, se usa solo el total.</div>
+              <label class="form-label">Tipo de actor</label>
+              <select id="tipo_actor" name="tipo_actor" class="form-select" required>
+                <option value="">Selecciona...</option>
+                <option value="TCP">TCP (Trabajador por Cuenta Propia)</option>
+                <option value="MIPYME">MIPYME</option>
+                <option value="CNA">CNA (Cooperativa No Agropecuaria)</option>
+                <option value="Estatal">Empresa Estatal</option>
+              </select>
             </div>
-
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-              <button type="submit" class="btn btn-primary btn-lg">Calcular y Guardar</button>
-              <button type="button" id="calcOnly" class="btn btn-secondary btn-lg">Solo Calcular (no guardar)</button>
-            </div>
-          </form>
-
-          <!-- Results Panel -->
-          <div class="calc-result" aria-live="polite">
-            <h3 style="margin: 0 0 16px; font-size: 1rem;">Resultado</h3>
-            <div id="resultContent">
-              <p style="color: var(--fg-muted); text-align: center; padding: 20px;">Completa el formulario para ver el cálculo</p>
+            <div class="form-group">
+              <label class="form-label">Mes</label>
+              <input type="month" id="mes" name="mes" class="form-input" required>
             </div>
           </div>
+
+          <div class="grid grid-2" style="gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Ventas brutas (CUP)</label>
+              <input type="number" id="ventas" name="ventas" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gastos deducibles (CUP)</label>
+              <input type="number" id="gastos" name="gastos" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg">Calcular</button>
+        </form>
+      </div>
+
+      <!-- Results -->
+      <div class="panel-card" id="results-card" style="display:none;">
+        <h2>Resultado del cálculo</h2>
+        <div class="grid grid-4" id="results-grid">
+          <!-- Filled by JS -->
         </div>
-      </section>
+        <div class="flex gap-2 mt-3">
+          <button type="button" id="save-btn" class="btn btn-success">Guardar cálculo</button>
+          <button type="button" id="print-btn" class="btn btn-secondary">Imprimir</button>
+        </div>
+      </div>
 
       <!-- History -->
-      <section class="card" aria-labelledby="historyTitle">
-        <div class="card-header">
-          <h2 class="card-title" id="historyTitle">Historial de Cálculos</h2>
+      <div class="panel-card">
+        <div class="flex flex-between" style="margin-bottom:1rem;">
+          <h2>Historial de cálculos</h2>
+          <button type="button" id="clear-history" class="btn btn-sm btn-danger">Limpiar historial</button>
         </div>
-        <div class="table-wrap">
-          <table class="history-table">
+        <div class="table-container">
+          <table class="table" id="history-table">
             <thead>
               <tr>
                 <th>Mes</th>
                 <th>Tipo</th>
                 <th>Ventas</th>
                 <th>Gastos</th>
+                <th>Utilidad</th>
                 <th>Impuesto</th>
                 <th>Fecha</th>
+                <th></th>
               </tr>
             </thead>
-            <tbody id="historyBody">
-              <!-- Populated by JS -->
+            <tbody>
+              <!-- Filled by JS -->
             </tbody>
           </table>
         </div>
-        <div id="emptyHistory" class="empty-state" hidden>
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <rect x="4" y="2" width="16" height="20" rx="2"/>
-            <path d="M4 8h16"/><path d="M8 12h8"/><path d="M8 16h4"/>
-          </svg>
-          <h3>Sin cálculos guardados</h3>
-          <p>Tu primer cálculo aparecerá aquí</p>
-        </div>
-      </section>
+        <p id="history-empty" class="text-center text-muted" style="display:none; padding:2rem;">No hay cálculos guardados.</p>
+      </div>
     </main>
   </div>
 
-  <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
-
   <script type="module">
-    import { pb } from '/panel/js/pb.js';
-    import { initSync } from '/panel/js/sync-queue.js';
-    import { injectNav } from '/panel/js/nav.js';
-    import { getCurrentBusiness, getOwnerId } from '/panel/js/auth.js';
+    import { pb } from './js/pb.js';
+    import { initNav } from './js/nav.js';
+    import { getCurrentNegocioId, encolarLocal } from './js/auth.js';
+    import { encolarLocal as encolarSync, flushCola } from './js/sync-queue.js';
 
-    injectNav('calculadora');
-    initSync(pb);
+    initNav();
 
-    const userAvatar = document.getElementById('userAvatar');
-    const calcForm = document.getElementById('calcForm');
-    const calcOnlyBtn = document.getElementById('calcOnly');
-    const resultContent = document.getElementById('resultContent');
-    const historyBody = document.getElementById('historyBody');
-    const emptyHistory = document.getElementById('emptyHistory');
-    const toast = document.getElementById('toast');
+    const alertContainer = document.getElementById('alert-container');
+    const calcForm = document.getElementById('calc-form');
+    const resultsCard = document.getElementById('results-card');
+    const resultsGrid = document.getElementById('results-grid');
+    const saveBtn = document.getElementById('save-btn');
+    const printBtn = document.getElementById('print-btn');
+    const historyTable = document.getElementById('history-table').querySelector('tbody');
+    const historyEmpty = document.getElementById('history-empty');
+    const clearHistoryBtn = document.getElementById('clear-history');
 
-    // ONAT 2026 rates (Cuba)
-    const RATES = {
-      TCP: {
-        brackets: [
-          { max: 50000, rate: 0.05 },
-          { max: 100000, rate: 0.10 },
-          { max: 200000, rate: 0.15 },
-          { max: Infinity, rate: 0.20 }
-        ],
-        minTax: 0
-      },
-      MIPYME: {
-        flatRate: 0.35, // 35% sobre utilidad neta
-        minTax: 0
-      }
-    };
+    let currentResults = null;
+    let currentNegocioId = null;
 
-    function showToast(msg, type = 'ok') {
-      toast.textContent = msg;
-      toast.className = `toast ${type}`;
-      toast.hidden = false;
-      setTimeout(() => { toast.hidden = true; }, 4000);
-    }
-
-    function formatCurrency(n) {
-      return new Intl.NumberFormat('es-CU', { style: 'currency', currency: 'CUP', minimumFractionDigits: 0 }).format(n);
-    }
-
-    function formatDate(d) {
-      return new Date(d).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
-    }
-
-    function calculateTax(tipoActor, ventas, gastos) {
-      const utilidad = Math.max(0, ventas - gastos);
-      let impuesto = 0;
-      let detalle = [];
-
-      if (tipoActor === 'TCP') {
-        let remaining = utilidad;
-        for (const bracket of RATES.TCP.brackets) {
-          const taxableInBracket = Math.min(remaining, bracket.max - (bracket.max === Infinity ? 0 : (RATES.TCP.brackets.indexOf(bracket) > 0 ? RATES.TCP.brackets[RATES.TCP.brackets.indexOf(bracket) - 1].max : 0)));
-          if (taxableInBracket > 0) {
-            const bracketTax = taxableInBracket * bracket.rate;
-            impuesto += bracketTax;
-            detalle.push({ tramo: `Hasta ${formatCurrency(bracket.max === Infinity ? '∞' : bracket.max)}`, tasa: `${(bracket.rate * 100).toFixed(0)}%`, base: taxableInBracket, impuesto: bracketTax });
-            remaining -= taxableInBracket;
-          }
-          if (remaining <= 0) break;
-        }
-      } else if (tipoActor === 'MIPYME') {
-        impuesto = utilidad * RATES.MIPYME.flatRate;
-        detalle.push({ tramo: 'Utilidad neta', tasa: '35%', base: utilidad, impuesto });
-      }
-
-      return { utilidad, impuesto: Math.round(impuesto * 100) / 100, detalle };
-    }
-
-    function renderResult(data, tipoActor) {
-      resultContent.innerHTML = `
-        <div class="calc-result-row">
-          <span class="calc-result-label">Ventas</span>
-          <span class="calc-result-value">${formatCurrency(data.ventas)}</span>
+    function showAlert(message, type = 'info') {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" flex-shrink="0">
+            ${type === 'error' ? '<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>' : '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>'}
+          </svg>
+          <span>${message}</span>
         </div>
-        <div class="calc-result-row">
-          <span class="calc-result-label">Gastos</span>
-          <span class="calc-result-value">${formatCurrency(data.gastos)}</span>
-        </div>
-        <div class="calc-result-row">
-          <span class="calc-result-label">Utilidad Neta</span>
-          <span class="calc-result-value ${data.utilidad >= 0 ? '' : 'err'}">${formatCurrency(data.utilidad)}</span>
-        </div>
-        <div class="calc-result-row">
-          <span class="calc-result-label">Impuesto Estimado (${tipoActor})</span>
-          <span class="calc-result-value accent">${formatCurrency(data.impuesto)}</span>
-        </div>
-        ${data.detalle.length > 1 ? `
-          <details style="margin-top: 16px;">
-            <summary style="cursor: pointer; color: var(--fg-muted); font-size: 0.85rem;">Ver desglose</summary>
-            <table style="width: 100%; font-size: 0.8rem; margin-top: 8px;">
-              <thead><tr><th style="text-align:left">Tramo</th><th>Tasa</th><th style="text-align:right">Base</th><th style="text-align:right">Impuesto</th></tr></thead>
-              <tbody>
-                ${data.detalle.map(d => `
-                  <tr>
-                    <td>${d.tramo}</td>
-                    <td>${d.tasa}</td>
-                    <td style="text-align:right">${formatCurrency(d.base)}</td>
-                    <td style="text-align:right">${formatCurrency(d.impuesto)}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </details>
-        ` : ''}
       `;
+      setTimeout(() => alertContainer.innerHTML = '', 5000);
+    }
+
+    function formatCUP(amount) {
+      return new Intl.NumberFormat('es-CU', { style: 'currency', currency: 'CUP', maximumFractionDigits: 2 }).format(amount);
+    }
+
+    function calculateONAT(tipo_actor, ventas, gastos) {
+      const utilidad = ventas - gastos;
+      let impuesto = 0;
+      let detalle = {};
+
+      if (tipo_actor === 'TCP') {
+        // TCP: 10% sobre utilidad neta, mínimo 1% sobre ventas brutas
+        const porUtilidad = utilidad * 0.10;
+        const minimo = ventas * 0.01;
+        impuesto = Math.max(porUtilidad, minimo);
+        detalle = { porUtilidad, minimo, base: utilidad };
+      } else if (tipo_actor === 'MIPYME') {
+        // MIPYME: 35% sobre utilidad neta
+        impuesto = utilidad > 0 ? utilidad * 0.35 : 0;
+        detalle = { base: utilidad, tasa: 0.35 };
+      } else if (tipo_actor === 'CNA') {
+        // CNA: 35% sobre utilidad neta (similar a MIPYME)
+        impuesto = utilidad > 0 ? utilidad * 0.35 : 0;
+        detalle = { base: utilidad, tasa: 0.35 };
+      } else {
+        // Estatal: régimen especial
+        impuesto = 0;
+        detalle = { regimen: 'especial' };
+      }
+
+      return { utilidad, impuesto, detalle };
+    }
+
+    function renderResults(r) {
+      resultsGrid.innerHTML = `
+        <div class="stat-card">
+          <div class="label">Utilidad neta</div>
+          <div class="value ${r.utilidad >= 0 ? 'success' : 'danger'}">${formatCUP(r.utilidad)}</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Impuesto estimado</div>
+          <div class="value warning">${formatCUP(r.impuesto)}</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Ventas brutas</div>
+          <div class="value">${formatCUP(r.ventas)}</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Gastos deducibles</div>
+          <div class="value">${formatCUP(r.gastos)}</div>
+        </div>
+      `;
+      resultsCard.style.display = 'block';
     }
 
     async function loadHistory() {
+      if (!currentNegocioId) return;
+      
       try {
-        const ownerId = getOwnerId();
-        if (!ownerId) return;
-
-        // Get business first
-        const business = await pb.collection('negocios').getFirstListItem(`owner="${ownerId}"`);
-        
         const records = await pb.collection('calculos_onat').getList(1, 20, {
-          filter: `negocio="${business.id}"`,
+          filter: `negocio = "${currentNegocioId}"`,
           sort: '-mes'
         });
 
         if (records.items.length === 0) {
-          emptyHistory.hidden = false;
-          historyBody.innerHTML = '';
+          historyTable.innerHTML = '';
+          historyEmpty.style.display = 'block';
           return;
         }
 
-        emptyHistory.hidden = true;
-        historyBody.innerHTML = records.items.map(r => {
-          const res = r.resultados || {};
-          return `
-            <tr>
-              <td>${new Date(r.mes).toLocaleDateString('es-ES', { month: 'short', year: 'numeric' })}</td>
-              <td><span class="badge ${r.tipo_actor === 'TCP' ? 'badge-verified' : 'badge-activo'}">${r.tipo_actor}</span></td>
-              <td>${formatCurrency(r.ventas)}</td>
-              <td>${formatCurrency(r.gastos)}</td>
-              <td style="color: var(--accent); font-weight: 600;">${formatCurrency(res.impuesto || 0)}</td>
-              <td>${formatDate(r.created)}</td>
-            </tr>
-          `;
-        }).join('');
+        historyEmpty.style.display = 'none';
+        historyTable.innerHTML = records.items.map(c => `
+          <tr>
+            <td>${new Date(c.mes).toLocaleDateString('es-CU', { month: 'long', year: 'numeric' })}</td>
+            <td><span class="badge">${c.tipo_actor}</span></td>
+            <td>${formatCUP(c.ventas)}</td>
+            <td>${formatCUP(c.gastos)}</td>
+            <td>${formatCUP(c.ventas - c.gastos)}</td>
+            <td>${formatCUP(c.resultados?.impuesto_total || 0)}</td>
+            <td>${new Date(c.created).toLocaleDateString('es-CU')}</td>
+            <td>
+              <button class="btn btn-sm btn-secondary" onclick="loadCalc('${c.id}')">Cargar</button>
+            </td>
+          </tr>
+        `).join('');
       } catch (err) {
-        console.error('History load error:', err);
-        emptyHistory.hidden = false;
+        console.error('Load history error:', err);
       }
     }
 
-    async function handleCalculate(e, save = true) {
-      e.preventDefault();
-      
-      const formData = new FormData(calcForm);
-      const tipo_actor = formData.get('tipo_actor');
-      const mes = formData.get('mes');
-      const ventas = parseFloat(formData.get('ventas')) || 0;
-      const gastos = parseFloat(formData.get('gastos')) || 0;
-      const gastos_detalle_raw = formData.get('gastos_detalle');
+    window.loadCalc = async function(id) {
+      try {
+        const record = await pb.collection('calculos_onat').getOne(id);
+        document.getElementById('tipo_actor').value = record.tipo_actor;
+        document.getElementById('mes').value = record.mes.split('T')[0];
+        document.getElementById('ventas').value = record.ventas;
+        document.getElementById('gastos').value = record.gastos;
+        calcForm.dispatchEvent(new Event('submit'));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        showAlert('Error cargando cálculo: ' + err.message, 'error');
+      }
+    };
 
-      if (!tipo_actor || !mes) {
-        showToast('❌ Completa tipo de actor y mes', 'err');
+    async function init() {
+      currentNegocioId = await getCurrentNegocioId();
+      if (!currentNegocioId) {
+        showAlert('No se encontró tu negocio. Completa tu perfil primero.', 'warning');
+        return;
+      }
+      await loadHistory();
+    }
+
+    calcForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const tipo_actor = calcForm.tipo_actor.value;
+      const mes = calcForm.mes.value;
+      const ventas = parseFloat(calcForm.ventas.value);
+      const gastos = parseFloat(calcForm.gastos.value);
+
+      if (!tipo_actor || !mes || isNaN(ventas) || isNaN(gastos)) {
+        showAlert('Completa todos los campos', 'error');
         return;
       }
 
-      const calc = calculateTax(tipo_actor, ventas, gastos);
-      renderResult({ ventas, gastos, ...calc }, tipo_actor);
+      const results = calculateONAT(tipo_actor, ventas, gastos);
+      results.ventas = ventas;
+      results.gastos = gastos;
+      results.mes = mes;
+      results.tipo_actor = tipo_actor;
+      currentResults = results;
 
-      if (!save) return;
+      renderResults(results);
+    });
+
+    saveBtn.addEventListener('click', async () => {
+      if (!currentResults || !currentNegocioId) return;
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Guardando...';
+
+      const data = {
+        negocio: currentNegocioId,
+        mes: currentResults.mes + '-01',
+        tipo_actor: currentResults.tipo_actor,
+        ventas: currentResults.ventas,
+        gastos: currentResults.gastos,
+        resultados: {
+          utilidad_neta: currentResults.utilidad,
+          impuesto_total: currentResults.impuesto,
+          detalle: currentResults.detalle
+        }
+      };
 
       try {
-        const ownerId = getOwnerId();
-        if (!ownerId) throw new Error('No autenticado');
-
-        const business = await pb.collection('negocios').getFirstListItem(`owner="${ownerId}"`);
-        
-        let gastos_detalle = [];
-        if (gastos_detalle_raw.trim()) {
-          try {
-            gastos_detalle = JSON.parse(gastos_detalle_raw);
-          } catch {
-            showToast('⚠️ JSON de gastos inválido, se ignora', 'warn');
-          }
-        }
-
-        const recordData = {
-          negocio: business.id,
-          mes: mes + '-01', // first day of month
-          tipo_actor,
-          ventas,
-          gastos,
-          resultados: {
-            utilidad: calc.utilidad,
-            impuesto: calc.impuesto,
-            detalle: calc.detalle,
-            gastos_detalle
-          }
-        };
-
-        await pb.collection('calculos_onat').create(recordData);
-        showToast('✅ Cálculo guardado', 'ok');
-        calcForm.reset();
-        loadHistory();
+        await pb.collection('calculos_onat').create(data);
+        showAlert('Cálculo guardado correctamente', 'success');
+        await loadHistory();
       } catch (err) {
-        console.error('Save error:', err);
-        if (err.message?.includes('Failed to fetch') || err.message?.includes('network')) {
-          await enqueueCreate('calculos_onat', recordData);
-          showToast('📴 Sin conexión — guardado localmente', 'warn');
-        } else {
-          showToast(`❌ ${err.response?.data?.message || 'Error al guardar'}`, 'err');
-        }
+        // Offline fallback
+        encolarSync({ collection: 'calculos_onat', data });
+        showAlert('Sin conexión. Guardado localmente, se sincronizará al volver.', 'warning');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar cálculo';
       }
-    }
+    });
 
-    calcForm.addEventListener('submit', (e) => handleCalculate(e, true));
-    calcOnlyBtn.addEventListener('click', (e) => handleCalculate(e, false));
+    printBtn.addEventListener('click', () => {
+      window.print();
+    });
 
-    // Init
-    async function init() {
+    clearHistoryBtn.addEventListener('click', async () => {
+      if (!confirm('¿Eliminar todo el historial de cálculos?')) return;
+      
       try {
-        const business = await getCurrentBusiness();
-        if (business) userAvatar.textContent = business.nombre?.charAt(0).toUpperCase() || '?';
-      } catch {}
-      loadHistory();
-    }
+        const records = await pb.collection('calculos_onat').getList(1, 100, {
+          filter: `negocio = "${currentNegocioId}"`
+        });
+        for (const r of records.items) {
+          await pb.collection('calculos_onat').delete(r.id);
+        }
+        showAlert('Historial eliminado', 'success');
+        await loadHistory();
+      } catch (err) {
+        showAlert('Error: ' + err.message, 'error');
+      }
+    });
 
     init();
   </script>

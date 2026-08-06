@@ -1,58 +1,48 @@
-// Offline-first sync queue — localStorage backed, flushes on online/reload
+// Offline-first sync queue using localStorage
 const QUEUE_KEY = 'verificuba_sync_queue';
 
-function readQueue() {
-  try {
-    return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
-  } catch {
-    return [];
+export function encolarLocal(datos) {
+  const cola = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+  cola.push({ ...datos, timestamp: Date.now() });
+  localStorage.setItem(QUEUE_KEY, JSON.stringify(cola));
+  console.log('[sync-queue] Encolado:', datos);
+}
+
+export function leerCola() {
+  return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+}
+
+export function quitarDeCola(item) {
+  const cola = leerCola();
+  const idx = cola.findIndex(i => i.timestamp === item.timestamp);
+  if (idx >= 0) {
+    cola.splice(idx, 1);
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(cola));
   }
 }
 
-function writeQueue(queue) {
-  localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
-}
+export async function flushCola(pb) {
+  const pendientes = leerCola();
+  if (!pendientes.length) return;
 
-export async function enqueueCreate(collection, data) {
-  const queue = readQueue();
-  queue.push({ collection, data, ts: Date.now(), type: 'create' });
-  writeQueue(queue);
-  return { queued: true };
-}
+  console.log('[sync-queue] Flushing', pendientes.length, 'items');
 
-export async function flushQueue(pb) {
-  const queue = readQueue();
-  if (!queue.length) return { flushed: 0 };
-
-  const remaining = [];
-  let flushed = 0;
-
-  for (const item of queue) {
+  for (const item of pendientes) {
     try {
-      if (item.type === 'create') {
-        await pb.collection(item.collection).create(item.data);
-      }
-      // add update/delete types here if needed
-      flushed++;
+      await pb.collection(item.collection).create(item.data);
+      quitarDeCola(item);
+      console.log('[sync-queue] Synced:', item);
     } catch (err) {
-      console.warn('[sync] flush failed for', item, err);
-      remaining.push(item);
+      console.warn('[sync-queue] Failed, will retry:', err.message);
+      // Keep in queue for next attempt
     }
   }
-
-  writeQueue(remaining);
-  return { flushed, remaining: remaining.length };
 }
 
-// Auto-flush on online event
+// Auto-flush when online
 window.addEventListener('online', () => {
-  console.log('[sync] online — flushing queue');
-  import('./pb.js').then(({ pb }) => flushQueue(pb));
+  if (window.pb) flushCola(window.pb);
 });
 
-// Flush on panel page load
-export async function initSync(pb) {
-  const { flushed, remaining } = await flushQueue(pb);
-  if (flushed) console.log('[sync] flushed', flushed, 'items');
-  if (remaining) console.log('[sync]', remaining, 'items still pending');
-}
+// Expose for manual trigger
+export const syncQueue = { encolarLocal, leerCola, quitarDeCola, flushCola };

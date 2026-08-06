@@ -3,464 +3,429 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Facturas — VerifiCuba Panel</title>
-  <link rel="stylesheet" href="/panel/css/panel.css">
-  <style>
-    .invoice-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    @media (max-width: 900px) { .invoice-form-grid { grid-template-columns: 1fr; } }
-    .items-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-    .items-table th, .items-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; }
-    .items-table th { font-size: 0.75rem; text-transform: uppercase; color: var(--fg-muted); background: var(--bg-elev); }
-    .items-table input { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: var(--fg); }
-    .items-table .item-qty { width: 80px; }
-    .items-table .item-price { width: 120px; }
-    .items-table .item-total { width: 120px; font-weight: 600; color: var(--accent); background: var(--accent-dim); }
-    .invoice-summary { background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
-    .invoice-summary-row { display: flex; justify-content: space-between; padding: 8px 0; }
-    .invoice-summary-row.total { border-top: 2px solid var(--line); margin-top: 8px; padding-top: 16px; font-weight: 700; font-size: 1.1rem; color: var(--accent); }
-    .history-table th:nth-child(4), .history-table td:nth-child(4) { text-align: right; }
-  </style>
+  <title>Facturas - VerifiCuba Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/panel.css">
 </head>
 <body>
-  <div id="nav-mount" data-nav="facturas"></div>
-
   <div class="panel-layout">
-    <header class="panel-header" role="banner">
-      <div class="header-left">
-        <button id="nav-toggle" class="nav-toggle" aria-label="Menú" aria-expanded="false" aria-controls="panel-nav">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
-        </button>
-        <h1 class="header-title">Facturas</h1>
-      </div>
-      <div class="header-right">
-        <div id="userAvatar" class="user-avatar" aria-label="Usuario"></div>
-      </div>
-    </header>
+    <nav id="panel-nav" class="panel-sidebar"></nav>
 
-    <main class="panel-main" role="main">
-      <!-- New Invoice Form -->
-      <section class="card" aria-labelledby="newInvoiceTitle">
-        <div class="card-header">
-          <h2 class="card-title" id="newInvoiceTitle">Nueva Factura</h2>
-        </div>
-        <div class="invoice-form-grid">
-          <form id="invoiceForm" novalidate>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="invoiceClient">Cliente</label>
-                <input type="text" id="invoiceClient" name="cliente" class="form-input" placeholder="Nombre del cliente" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="invoiceClientId">CUIT/NIT Cliente (opcional)</label>
-                <input type="text" id="invoiceClientId" name="cliente_id" class="form-input" placeholder="Identificación fiscal">
-              </div>
-            </div>
+    <main class="panel-main">
+      <header class="panel-header">
+        <h1>Facturas</h1>
+        <p class="subtitle">Genera y gestiona tus facturas</p>
+      </header>
 
+      <div id="alert-container"></div>
+
+      <!-- New invoice form -->
+      <div class="panel-card" id="new-invoice-card">
+        <h2>Nueva factura</h2>
+        <form id="invoice-form" novalidate>
+          <div class="grid grid-2" style="gap: 1rem;">
             <div class="form-group">
-              <label class="form-label">Ítems</label>
-              <table class="items-table" id="itemsTable">
-                <thead>
-                  <tr>
-                    <th style="width: 40%">Descripción</th>
-                    <th class="item-qty">Cant.</th>
-                    <th class="item-price">Precio Unit.</th>
-                    <th class="item-total">Subtotal</th>
-                    <th style="width: 48px"></th>
-                  </tr>
-                </thead>
-                <tbody id="itemsBody">
-                  <!-- Rows added by JS -->
-                </tbody>
-              </table>
-              <button type="button" id="addItemBtn" class="btn btn-secondary btn-sm" style="margin-top: 12px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Añadir ítem
-              </button>
+              <label class="form-label">Número de factura</label>
+              <input type="text" id="numero" name="numero" class="form-input" placeholder="F-001" required>
             </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="invoiceNotes">Notas (opcional)</label>
-                <textarea id="invoiceNotes" name="notas" class="form-textarea" placeholder="Términos, condiciones, etc." rows="3"></textarea>
-              </div>
-            </div>
-
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
-              <button type="submit" class="btn btn-primary btn-lg">Generar Factura + PDF</button>
-              <button type="button" id="previewPdfBtn" class="btn btn-secondary btn-lg">Vista Previa PDF</button>
-            </div>
-          </form>
-
-          <!-- Summary Panel -->
-          <div class="invoice-summary" aria-live="polite">
-            <h3 style="margin: 0 0 16px; font-size: 1rem;">Resumen</h3>
-            <div id="summaryContent">
-              <p style="color: var(--fg-muted); text-align: center; padding: 20px;">Añade ítems para ver el total</p>
+            <div class="form-group">
+              <label class="form-label">Fecha</label>
+              <input type="date" id="fecha" name="fecha" class="form-input" required>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Invoice History -->
-      <section class="card" aria-labelledby="invHistoryTitle">
-        <div class="card-header">
-          <h2 class="card-title" id="invHistoryTitle">Historial de Facturas</h2>
+          <div id="items-container">
+            <h3 style="margin: 1rem 0 0.5rem;">Conceptos</h3>
+            <div class="table-container">
+              <table class="table" id="items-table">
+                <thead>
+                  <tr>
+                    <th style="width: 50%;">Descripción</th>
+                    <th style="width: 15%;">Cantidad</th>
+                    <th style="width: 20%;">Precio unitario</th>
+                    <th style="width: 15%;">Subtotal</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="items-tbody">
+                  <!-- Rows added dynamically -->
+                </tbody>
+              </table>
+            </div>
+            <button type="button" id="add-item" class="btn btn-secondary btn-sm mt-2">+ Agregar concepto</button>
+          </div>
+
+          <div class="grid grid-3" style="gap: 1rem; margin-top: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Subtotal</label>
+              <input type="text" id="subtotal" class="form-input" readonly style="background: var(--surface-alt);">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Impuesto (10%)</label>
+              <input type="text" id="impuesto" class="form-input" readonly style="background: var(--surface-alt);">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Total</label>
+              <input type="text" id="total" class="form-input" readonly style="background: var(--surface-alt); font-weight: 700; font-size: 1.125rem;">
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar factura</button>
+            <button type="button" id="preview-btn" class="btn btn-secondary btn-lg">Vista previa PDF</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Invoices list -->
+      <div class="panel-card">
+        <div class="flex flex-between" style="margin-bottom:1rem;">
+          <h2>Facturas guardadas</h2>
+          <button type="button" id="new-invoice-btn" class="btn btn-secondary">+ Nueva factura</button>
         </div>
-        <div class="table-wrap">
-          <table class="history-table">
+        <div class="table-container">
+          <table class="table" id="invoices-table">
             <thead>
               <tr>
                 <th>Número</th>
-                <th>Cliente</th>
                 <th>Fecha</th>
+                <th>Conceptos</th>
+                <th>Subtotal</th>
+                <th>Impuesto</th>
                 <th>Total</th>
-                <th>Acciones</th>
+                <th>PDF</th>
+                <th></th>
               </tr>
             </thead>
-            <tbody id="invHistoryBody">
-              <!-- Populated by JS -->
+            <tbody id="invoices-tbody">
+              <!-- Filled by JS -->
             </tbody>
           </table>
         </div>
-        <div id="emptyInvHistory" class="empty-state" hidden>
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
-          </svg>
-          <h3>Sin facturas emitidas</h3>
-          <p>Tu primera factura aparecerá aquí</p>
-        </div>
-      </section>
+        <p id="invoices-empty" class="text-center text-muted" style="display:none; padding:2rem;">No hay facturas guardadas.</p>
+      </div>
     </main>
   </div>
 
-  <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
-
   <script type="module">
-    import { pb } from '/panel/js/pb.js';
-    import { initSync } from '/panel/js/sync-queue.js';
-    import { injectNav } from '/panel/js/nav.js';
-    import { getCurrentBusiness, getOwnerId } from '/panel/js/auth.js';
+    import { pb } from './js/pb.js';
+    import { initNav } from './js/nav.js';
+    import { getCurrentNegocioId } from './js/auth.js';
+    import { encolarLocal } from './js/sync-queue.js';
 
-    injectNav('facturas');
-    initSync(pb);
+    initNav();
 
-    const userAvatar = document.getElementById('userAvatar');
-    const invoiceForm = document.getElementById('invoiceForm');
-    const itemsBody = document.getElementById('itemsBody');
-    const addItemBtn = document.getElementById('addItemBtn');
-    const summaryContent = document.getElementById('summaryContent');
-    const invHistoryBody = document.getElementById('invHistoryBody');
-    const emptyInvHistory = document.getElementById('emptyInvHistory');
-    const toast = document.getElementById('toast');
-    const previewPdfBtn = document.getElementById('previewPdfBtn');
+    const alertContainer = document.getElementById('alert-container');
+    const invoiceForm = document.getElementById('invoice-form');
+    const newInvoiceCard = document.getElementById('new-invoice-card');
+    const itemsTbody = document.getElementById('items-tbody');
+    const addItemBtn = document.getElementById('add-item');
+    const subtotalEl = document.getElementById('subtotal');
+    const impuestoEl = document.getElementById('impuesto');
+    const totalEl = document.getElementById('total');
+    const invoicesTbody = document.getElementById('invoices-tbody');
+    const invoicesEmpty = document.getElementById('invoices-empty');
+    const newInvoiceBtn = document.getElementById('new-invoice-btn');
+    const previewBtn = document.getElementById('preview-btn');
 
+    let currentNegocioId = null;
     let itemCounter = 0;
 
-    function showToast(msg, type = 'ok') {
-      toast.textContent = msg;
-      toast.className = `toast ${type}`;
-      toast.hidden = false;
-      setTimeout(() => { toast.hidden = true; }, 4000);
-    }
-
-    function formatCurrency(n) {
-      return new Intl.NumberFormat('es-CU', { style: 'currency', currency: 'CUP', minimumFractionDigits: 0 }).format(n);
-    }
-
-    function formatDate(d) {
-      return new Date(d).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
-    }
-
-    function createItemRow(item = {}) {
-      itemCounter++;
-      const id = `item_${itemCounter}`;
-      const tr = document.createElement('tr');
-      tr.dataset.id = id;
-      tr.innerHTML = `
-        <td><input type="text" name="descripcion" class="form-input" value="${item.descripcion || ''}" placeholder="Descripción" required></td>
-        <td><input type="number" name="cantidad" class="form-input item-qty" value="${item.cantidad || 1}" min="1" step="1" required></td>
-        <td><input type="number" name="precio" class="form-input item-price" value="${item.precio || 0}" min="0" step="0.01" required></td>
-        <td class="item-total" data-total="${item.precio * item.cantidad || 0}">${formatCurrency(item.precio * item.cantidad || 0)}</td>
-        <td><button type="button" class="btn btn-ghost btn-sm" aria-label="Eliminar" style="color: var(--err);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></td>
+    function showAlert(message, type = 'info') {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" flex-shrink="0">
+            ${type === 'error' ? '<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>' : '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>'}
+          </svg>
+          <span>${message}</span>
+        </div>
       `;
-      return tr;
+      setTimeout(() => alertContainer.innerHTML = '', 5000);
     }
 
-    function updateTotals() {
-      let subtotal = 0;
-      itemsBody.querySelectorAll('tr').forEach(tr => {
-        const qty = parseFloat(tr.querySelector('[name="cantidad"]').value) || 0;
-        const precio = parseFloat(tr.querySelector('[name="precio"]').value) || 0;
-        const itemTotal = qty * precio;
-        tr.querySelector('.item-total').textContent = formatCurrency(itemTotal);
-        tr.querySelector('.item-total').dataset.total = itemTotal;
-        subtotal += itemTotal;
+    function formatCUP(amount) {
+      return new Intl.NumberFormat('es-CU', { style: 'currency', currency: 'CUP', maximumFractionDigits: 2 }).format(amount);
+    }
+
+    function addItemRow(item = {}) {
+      const id = ++itemCounter;
+      const row = document.createElement('tr');
+      row.dataset.id = id;
+      row.innerHTML = `
+        <td><input type="text" name="descripcion" class="form-input" placeholder="Descripción del servicio/producto" value="${item.descripcion || ''}" required></td>
+        <td><input type="number" name="cantidad" class="form-input" placeholder="1" step="0.01" min="0.01" value="${item.cantidad || 1}" required></td>
+        <td><input type="number" name="precio" class="form-input" placeholder="0.00" step="0.01" min="0" value="${item.precio || ''}" required></td>
+        <td><input type="text" name="subtotal" class="form-input" readonly style="background: var(--surface-alt);"></td>
+        <td><button type="button" class="btn btn-sm btn-danger" onclick="removeItem(${id})">×</button></td>
+      `;
+      itemsTbody.appendChild(row);
+
+      // Add listeners
+      row.querySelectorAll('input[name="cantidad"], input[name="precio"]').forEach(input => {
+        input.addEventListener('input', calculateTotals);
       });
-      const impuesto = Math.round(subtotal * 0.15 * 100) / 100; // 15% IVA estimado
+    }
+
+    window.removeItem = function(id) {
+      const row = itemsTbody.querySelector(`tr[data-id="${id}"]`);
+      if (row) {
+        row.remove();
+        calculateTotals();
+      }
+    };
+
+    function calculateTotals() {
+      let subtotal = 0;
+      itemsTbody.querySelectorAll('tr').forEach(row => {
+        const cantidad = parseFloat(row.querySelector('input[name="cantidad"]').value) || 0;
+        const precio = parseFloat(row.querySelector('input[name="precio"]').value) || 0;
+        const itemSubtotal = cantidad * precio;
+        row.querySelector('input[name="subtotal"]').value = formatCUP(itemSubtotal);
+        subtotal += itemSubtotal;
+      });
+      const impuesto = subtotal * 0.10;
       const total = subtotal + impuesto;
 
-      summaryContent.innerHTML = `
-        <div class="invoice-summary-row"><span>Subtotal</span><span>${formatCurrency(subtotal)}</span></div>
-        <div class="invoice-summary-row"><span>IVA (15%)</span><span>${formatCurrency(impuesto)}</span></div>
-        <div class="invoice-summary-row total"><span>Total</span><span>${formatCurrency(total)}</span></div>
-      `;
-      return { subtotal, impuesto, total };
+      subtotalEl.value = formatCUP(subtotal);
+      impuestoEl.value = formatCUP(impuesto);
+      totalEl.value = formatCUP(total);
     }
 
-    function addEmptyRow() {
-      itemsBody.appendChild(createItemRow());
-      bindItemEvents();
-      updateTotals();
-    }
-
-    function bindItemEvents() {
-      itemsBody.querySelectorAll('input').forEach(input => {
-        input.addEventListener('input', updateTotals);
+    function getItemsData() {
+      const items = [];
+      itemsTbody.querySelectorAll('tr').forEach(row => {
+        items.push({
+          descripcion: row.querySelector('input[name="descripcion"]').value,
+          cantidad: parseFloat(row.querySelector('input[name="cantidad"]').value),
+          precio: parseFloat(row.querySelector('input[name="precio"]').value),
+          subtotal: parseFloat(row.querySelector('input[name="cantidad"]').value) * parseFloat(row.querySelector('input[name="precio"]').value)
+        });
       });
-      itemsBody.querySelectorAll('button[aria-label="Eliminar"]').forEach(btn => {
-        btn.onclick = () => {
-          btn.closest('tr').remove();
-          updateTotals();
-        };
-      });
+      return items;
     }
 
-    // PDF Generation using window.print() with print CSS
-    function generatePDF(invoiceData, items, business) {
-      const { subtotal, impuesto, total } = updateTotals();
-      const numero = invoiceData.numero || `FAC-${Date.now().toString(36).toUpperCase()}`;
-      
+    function generatePDF(invoice) {
+      // Simple PDF generation using window.print with a print-friendly layout
       const printWindow = window.open('', '_blank');
+      const itemsHtml = invoice.items.map(item => `
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd;">${item.descripcion}</td>
+          <td style="padding:8px; border:1px solid #ddd; text-align:center;">${item.cantidad}</td>
+          <td style="padding:8px; border:1px solid #ddd; text-align:right;">${formatCUP(item.precio)}</td>
+          <td style="padding:8px; border:1px solid #ddd; text-align:right;">${formatCUP(item.subtotal)}</td>
+        </tr>
+      `).join('');
+
       printWindow.document.write(`
         <!DOCTYPE html>
-        <html lang="es">
+        <html>
         <head>
-          <meta charset="UTF-8">
-          <title>Factura ${numero}</title>
+          <title>Factura ${invoice.numero}</title>
           <style>
-            @page { margin: 20mm; size: A4; }
-            body { font-family: system-ui, sans-serif; font-size: 12px; color: #111; line-height: 1.4; }
-            .header { display: flex; justify-content: space-between; margin-bottom: 24px; border-bottom: 2px solid #06b6d4; padding-bottom: 16px; }
-            .logo { font-weight: 700; font-size: 1.5rem; color: #06b6d4; }
-            .invoice-title { text-align: right; }
-            .invoice-title h1 { margin: 0; font-size: 1.8rem; color: #06b6d4; }
-            .invoice-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-            .box { border: 1px solid #ddd; border-radius: 6px; padding: 12px; }
-            .box-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; color: #666; margin-bottom: 8px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-            th, td { padding: 8px 10px; border-bottom: 1px solid #ddd; text-align: left; }
-            th { background: #f5f5f5; font-weight: 600; font-size: 0.85rem; }
-            .text-right { text-align: right; }
-            .totals { margin-top: 16px; display: flex; justify-content: flex-end; }
-            .totals-table { width: 300px; }
-            .totals-table td { padding: 6px 10px; }
-            .totals-table .total-row { font-weight: 700; font-size: 1.1rem; border-top: 2px solid #06b6d4; color: #06b6d4; }
-            .notes { margin-top: 24px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.85rem; color: #666; }
-            @media print { .no-print { display: none; } body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            .header { text-align: center; margin-bottom: 30px; }
+            .info { display: flex; justify-content: space-between; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            th, td { padding: 8px; border: 1px solid #ddd; }
+            th { background: #f5f5f5; }
+            .totals { width: 300px; margin-left: auto; }
+            .totals tr td { padding: 5px 10px; }
+            .totals tr:last-child td { font-weight: bold; font-size: 1.2em; border-top: 2px solid #000; }
+            @media print { .no-print { display: none; } }
           </style>
         </head>
         <body>
           <div class="header">
-            <div class="logo">VerifiCuba</div>
-            <div class="invoice-title">
-              <h1>FACTURA</h1>
-              <div>N° <strong>${numero}</strong></div>
-              <div>Fecha: ${formatDate(invoiceData.fecha)}</div>
-            </div>
+            <h1>FACTURA</h1>
+            <p>VerifiCuba - Factura N° ${invoice.numero}</p>
           </div>
-          <div class="invoice-meta">
-            <div class="box">
-              <div class="box-title">Emisor</div>
-              <div><strong>${business.nombre}</strong></div>
-              <div>${business.provincia}, ${business.municipio}</div>
-              <div>WhatsApp: ${business.whatsapp || 'N/A'}</div>
+          <div class="info">
+            <div>
+              <strong>Fecha:</strong> ${new Date(invoice.fecha).toLocaleDateString('es-CU')}<br>
+              <strong>Negocio:</strong> ${invoice.negocio_nombre || 'Tu negocio'}
             </div>
-            <div class="box">
-              <div class="box-title">Cliente</div>
-              <div><strong>${invoiceData.cliente}</strong></div>
-              ${invoiceData.cliente_id ? `<div>ID Fiscal: ${invoiceData.cliente_id}</div>` : ''}
+            <div style="text-align:right;">
+              <strong>Subtotal:</strong> ${formatCUP(invoice.subtotal)}<br>
+              <strong>Impuesto (10%):</strong> ${formatCUP(invoice.impuesto)}<br>
+              <strong>Total:</strong> ${formatCUP(invoice.total)}
             </div>
           </div>
           <table>
             <thead>
-              <tr><th style="width: 50%">Descripción</th><th class="text-right" style="width: 15%">Cant.</th><th class="text-right" style="width: 20%">Precio Unit.</th><th class="text-right" style="width: 15%">Subtotal</th></tr>
+              <tr>
+                <th>Descripción</th>
+                <th>Cant.</th>
+                <th>P. Unit.</th>
+                <th>Subtotal</th>
+              </tr>
             </thead>
             <tbody>
-              ${items.map(item => `
-                <tr>
-                  <td>${item.descripcion}</td>
-                  <td class="text-right">${item.cantidad}</td>
-                  <td class="text-right">${formatCurrency(item.precio)}</td>
-                  <td class="text-right">${formatCurrency(item.cantidad * item.precio)}</td>
-                </tr>
-              `).join('')}
+              ${itemsHtml}
             </tbody>
           </table>
-          <div class="totals">
-            <table class="totals-table">
-              <tr><td>Subtotal</td><td class="text-right">${formatCurrency(subtotal)}</td></tr>
-              <tr><td>IVA (15%)</td><td class="text-right">${formatCurrency(impuesto)}</td></tr>
-              <tr class="total-row"><td>Total</td><td class="text-right">${formatCurrency(total)}</td></tr>
-            </table>
+          <table class="totals">
+            <tr><td>Subtotal</td><td style="text-align:right;">${formatCUP(invoice.subtotal)}</td></tr>
+            <tr><td>Impuesto (10%)</td><td style="text-align:right;">${formatCUP(invoice.impuesto)}</td></tr>
+            <tr><td>TOTAL</td><td style="text-align:right;">${formatCUP(invoice.total)}</td></tr>
+          </table>
+          <div style="margin-top:40px; text-align:center; color:#666; font-size:0.8em;">
+            Generado por VerifiCuba - verificuba.netlify.app
           </div>
-          ${invoiceData.notas ? `<div class="notes"><strong>Notas:</strong> ${invoiceData.notas}</div>` : ''}
-          <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); };</script>
+          <script>
+            window.onload = function() { window.print(); }
+          <\/script>
         </body>
         </html>
       `);
       printWindow.document.close();
     }
 
-    async function loadHistory() {
-      try {
-        const ownerId = getOwnerId();
-        if (!ownerId) return;
+    async function loadInvoices() {
+      if (!currentNegocioId) return;
 
-        const business = await pb.collection('negocios').getFirstListItem(`owner="${ownerId}"`);
-        const records = await pb.collection('facturas').getList(1, 20, {
-          filter: `negocio="${business.id}"`,
-          sort: '-created'
+      try {
+        const records = await pb.collection('facturas').getList(1, 50, {
+          filter: `negocio = "${currentNegocioId}"`,
+          sort: '-fecha'
         });
 
         if (records.items.length === 0) {
-          emptyInvHistory.hidden = false;
-          invHistoryBody.innerHTML = '';
+          invoicesTbody.innerHTML = '';
+          invoicesEmpty.style.display = 'block';
           return;
         }
 
-        emptyInvHistory.hidden = true;
-        invHistoryBody.innerHTML = records.items.map(r => {
-          const items = r.items || [];
-          const total = items.reduce((sum, i) => sum + (i.cantidad * i.precio), 0) * 1.15;
-          return `
-            <tr>
-              <td>${r.numero || r.id.slice(0, 8).toUpperCase()}</td>
-              <td>${r.cliente}</td>
-              <td>${formatDate(r.created)}</td>
-              <td style="font-weight: 600; color: var(--accent);">${formatCurrency(total)}</td>
-              <td>
-                <button class="btn btn-ghost btn-sm" onclick="window.open('/panel/facturas.html?print=${r.id}', '_blank')" title="Ver PDF">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                </button>
-              </td>
-            </tr>
-          `;
-        }).join('');
+        invoicesEmpty.style.display = 'none';
+        invoicesTbody.innerHTML = records.items.map(f => `
+          <tr>
+            <td>${f.numero}</td>
+            <td>${new Date(f.fecha).toLocaleDateString('es-CU')}</td>
+            <td>${f.items?.length || 0} conceptos</td>
+            <td>${formatCUP(f.subtotal)}</td>
+            <td>${formatCUP(f.impuesto)}</td>
+            <td><strong>${formatCUP(f.total)}</strong></td>
+            <td>${f.pdf ? '<span class="badge badge-verificado">PDF</span>' : '<span class="badge badge-pending">Sin PDF</span>'}</td>
+            <td>
+              <button class="btn btn-sm btn-secondary" onclick="viewPDF('${f.id}')">Ver</button>
+            </td>
+          </tr>
+        `).join('');
       } catch (err) {
-        console.error('Invoice history error:', err);
-        emptyInvHistory.hidden = false;
+        console.error('Load invoices error:', err);
+        showAlert('Error cargando facturas: ' + err.message, 'error');
       }
     }
+
+    window.viewPDF = async function(id) {
+      try {
+        const record = await pb.collection('facturas').getOne(id);
+        generatePDF(record);
+      } catch (err) {
+        showAlert('Error: ' + err.message, 'error');
+      }
+    };
+
+    async function init() {
+      currentNegocioId = await getCurrentNegocioId();
+      if (!currentNegocioId) {
+        showAlert('No se encontró tu negocio. Completa tu perfil primero.', 'warning');
+        return;
+      }
+
+      // Set today's date
+      document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+
+      // Add first item row
+      addItemRow();
+
+      await loadInvoices();
+    }
+
+    newInvoiceBtn.addEventListener('click', () => {
+      newInvoiceCard.style.display = 'block';
+      newInvoiceBtn.style.display = 'none';
+      window.scrollTo({ top: newInvoiceCard.offsetTop - 100, behavior: 'smooth' });
+    });
+
+    addItemBtn.addEventListener('click', () => addItemRow());
 
     invoiceForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const formData = new FormData(invoiceForm);
-      const cliente = formData.get('cliente');
-      const cliente_id = formData.get('cliente_id');
-      const notas = formData.get('notas');
-
-      // Collect items
-      const items = [];
-      itemsBody.querySelectorAll('tr').forEach(tr => {
-        const descripcion = tr.querySelector('[name="descripcion"]').value.trim();
-        const cantidad = parseFloat(tr.querySelector('[name="cantidad"]').value) || 0;
-        const precio = parseFloat(tr.querySelector('[name="precio"]').value) || 0;
-        if (descripcion && cantidad > 0) {
-          items.push({ descripcion, cantidad, precio });
-        }
-      });
-
-      if (!cliente || items.length === 0) {
-        showToast('❌ Cliente y al menos un ítem son requeridos', 'err');
+      const items = getItemsData();
+      if (items.length === 0) {
+        showAlert('Agrega al menos un concepto', 'error');
         return;
       }
 
+      if (items.some(i => !i.descripcion || !i.cantidad || !i.precio)) {
+        showAlert('Completa todos los campos de los conceptos', 'error');
+        return;
+      }
+
+      const subtotal = items.reduce((sum, i) => sum + i.subtotal, 0);
+      const impuesto = subtotal * 0.10;
+      const total = subtotal + impuesto;
+
+      const submitBtn = invoiceForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Guardando...';
+
+      const data = {
+        negocio: currentNegocioId,
+        numero: invoiceForm.numero.value,
+        fecha: invoiceForm.fecha.value,
+        items,
+        subtotal,
+        impuesto,
+        total
+      };
+
       try {
-        const ownerId = getOwnerId();
-        const business = await pb.collection('negocios').getFirstListItem(`owner="${ownerId}"`);
-
-        // Generate sequential number per business
-        const count = await pb.collection('facturas').getList(1, 1, { filter: `negocio="${business.id}"`, sort: '-created' });
-        const nextNum = (count.totalItems + 1).toString().padStart(4, '0');
-        const numero = `FAC-${nextNum}`;
-
-        const { subtotal, impuesto, total } = updateTotals();
-
-        const recordData = {
-          negocio: business.id,
-          numero,
-          cliente,
-          cliente_id,
-          items,
-          subtotal,
-          impuesto,
-          total,
-          notas
-        };
-
-        const record = await pb.collection('facturas').create(recordData);
-        showToast(`✅ Factura ${numero} generada`, 'ok');
+        const record = await pb.collection('facturas').create(data);
+        showAlert('Factura guardada: ' + record.numero, 'success');
         
+        // Reset form
         invoiceForm.reset();
-        itemsBody.innerHTML = '';
-        addEmptyRow();
-        loadHistory();
-
-        // Auto-open PDF
-        generatePDF({ ...recordData, fecha: new Date() }, items, business);
+        itemsTbody.innerHTML = '';
+        itemCounter = 0;
+        addItemRow();
+        calculateTotals();
+        document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+        
+        await loadInvoices();
       } catch (err) {
-        console.error('Invoice save error:', err);
-        if (err.message?.includes('Failed to fetch') || err.message?.includes('network')) {
-          await enqueueCreate('facturas', recordData);
-          showToast('📴 Sin conexión — guardado localmente', 'warn');
-        } else {
-          showToast(`❌ ${err.response?.data?.message || 'Error al guardar'}`, 'err');
-        }
+        encolarLocal({ collection: 'facturas', data });
+        showAlert('Sin conexión. Guardado localmente.', 'warning');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Guardar factura';
       }
     });
 
-    previewPdfBtn.addEventListener('click', async () => {
-      const formData = new FormData(invoiceForm);
-      const cliente = formData.get('cliente');
-      const items = [];
-      itemsBody.querySelectorAll('tr').forEach(tr => {
-        const descripcion = tr.querySelector('[name="descripcion"]').value.trim();
-        const cantidad = parseFloat(tr.querySelector('[name="cantidad"]').value) || 0;
-        const precio = parseFloat(tr.querySelector('[name="precio"]').value) || 0;
-        if (descripcion && cantidad > 0) {
-          items.push({ descripcion, cantidad, precio });
-        }
-      });
-
-      if (!cliente || items.length === 0) {
-        showToast('❌ Añade cliente e ítems primero', 'err');
+    previewBtn.addEventListener('click', () => {
+      const items = getItemsData();
+      if (items.length === 0) {
+        showAlert('Agrega conceptos primero', 'error');
         return;
       }
 
-      try {
-        const business = await getCurrentBusiness();
-        generatePDF({ cliente, fecha: new Date(), numero: 'PREVIEW', notas: formData.get('notas') }, items, business);
-      } catch {
-        showToast('❌ Error generando preview', 'err');
-      }
-    });
+      const subtotal = items.reduce((sum, i) => sum + i.subtotal, 0);
+      const impuesto = subtotal * 0.10;
+      const total = subtotal + impuesto;
 
-    // Init
-    async function init() {
-      try {
-        const business = await getCurrentBusiness();
-        if (business) userAvatar.textContent = business.nombre?.charAt(0).toUpperCase() || '?';
-      } catch {}
-      addEmptyRow();
-      loadHistory();
-    }
+      generatePDF({
+        numero: invoiceForm.numero.value || 'BORRADOR',
+        fecha: invoiceForm.fecha.value,
+        negocio_nombre: 'Tu negocio',
+        items,
+        subtotal,
+        impuesto,
+        total
+      });
+    });
 
     init();
   </script>
