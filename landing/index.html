@@ -602,16 +602,83 @@ document.getElementById('regForm').addEventListener('submit',function(e){
       whatsapp=document.getElementById('f-whatsapp').value.trim(),acepta=document.getElementById('f-acepto').checked;
   if(!nombre||!tipo||!categoria||!provincia||!municipio||!whatsapp){showToast('Por favor completa todos los campos obligatorios.');return}
   if(!acepta){showToast('Debes aceptar que te contactemos por WhatsApp.');return}
-  var btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Enviando...';
-  var data={nombre:nombre,tipo_actor:tipo,provincia:provincia,municipio:municipio,whatsapp:whatsapp,
-    descripcion:document.getElementById('f-descripcion').value.trim(),estado:'Pendiente',plan:'Básico',slug:slugify(nombre)};
-  categoriaId(categoria).then(function(id){
-    if(id)data.categoria=id;
-    return fetch(PB_URL+'/api/collections/negocios/records',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  var btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Creando tu cuenta...';
+  
+  // Generar password aleatoria temporal
+  var tempPassword = Math.random().toString(36).slice(-8) + 'A1!';
+  var slug = slugify(nombre);
+  
+  // 1. Crear usuario en PocketBase (auth collection)
+  fetch(PB_URL+'/api/collections/users/records', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      username: whatsapp,
+      password: tempPassword,
+      passwordConfirm: tempPassword,
+      name: nombre
+    })
   })
-  .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
-  .then(function(){document.getElementById('regForm').style.display='none';document.getElementById('regSuccess').classList.add('show');showToast('¡Registro enviado! Te contactaremos pronto.')})
-  .catch(function(){btn.disabled=false;btn.textContent='Registrar mi negocio gratis';showToast('Error de conexión. Escríbenos directo por WhatsApp.')});
+  .then(function(r){
+    if(!r.ok) throw new Error('Error creando usuario: '+r.status);
+    return r.json();
+  })
+  .then(function(user){
+    // 2. Crear negocio vinculado al usuario
+    return categoriaId(categoria).then(function(id){
+      var data = {
+        nombre: nombre,
+        tipo_actor: tipo,
+        provincia: provincia,
+        municipio: municipio,
+        whatsapp: whatsapp,
+        descripcion: document.getElementById('f-descripcion').value.trim(),
+        estado: 'Pendiente',
+        plan: 'Básico',
+        slug: slug,
+        owner: user.id
+      };
+      if(id) data.categoria = id;
+      return fetch(PB_URL+'/api/collections/negocios/records', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(data)
+      });
+    })
+    .then(function(r){
+      if(!r.ok) throw new Error('Error creando negocio: '+r.status);
+      return r.json();
+    })
+    .then(function(negocio){
+      // 3. Auto-login con las credenciales creadas
+      return fetch(PB_URL+'/api/collections/users/auth-with-password', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          identity: whatsapp,
+          password: tempPassword
+        })
+      });
+    })
+    .then(function(r){
+      if(!r.ok) throw new Error('Login falló: '+r.status);
+      return r.json();
+    })
+    .then(function(auth){
+      // Guardar token y redirigir al panel
+      localStorage.setItem('pb_auth', JSON.stringify(auth));
+      showToast('¡Cuenta creada! Redirigiendo a tu panel...');
+      setTimeout(function(){
+        window.location.href = '/panel/dashboard.html';
+      }, 1500);
+    })
+    .catch(function(err){
+      console.error(err);
+      btn.disabled=false;
+      btn.textContent='Registrar mi negocio gratis';
+      showToast('Error: '+err.message+'. Escríbenos por WhatsApp.');
+    });
+  });
 });
 // smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}})});
